@@ -38,6 +38,21 @@ from litgpt.utils import (
     save_hyperparameters,
 )
 
+def format_number(num):
+    if abs(num) >= 10**12:  # Trillion
+        return "{:.2f}T".format(num / 10**12)
+    elif abs(num) >= 10**9:  # Billion
+        return "{:.2f}B".format(num / 10**9)
+    elif abs(num) >= 10**6:  # Million
+        return "{:.2f}M".format(num / 10**6)
+    else:
+        return str(num)
+    
+def show_total_params(model):
+    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+    params = sum([np.prod(p.size()) for p in model_parameters])    
+    print('trainable params: ', format_number(params))
+
 
 def setup(
     model_name: Optional[str] = None,
@@ -174,6 +189,7 @@ def main(
 
     model = torch.compile(model)
     model = fabric.setup(model)
+    show_total_params(model)
 
     extra_kwargs = {"fused": fabric.device.type == "cuda"}
     optimizer = instantiate_torch_optimizer(optimizer, model.parameters(), **extra_kwargs)
