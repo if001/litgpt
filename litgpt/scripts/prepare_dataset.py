@@ -14,11 +14,11 @@ def parse():
 
 def main():
     args = parse()
-    print('load', args.repo_id)
+    print('load', args.dataset_path)
     if 'json' in args.dataset_path:
-        ds = load_dataset('json', data_files=args.repo_id, split="train")
+        ds = load_dataset('json', data_files=args.dataset_path, split="train")
     else:
-        ds = load_dataset(args.repo_id, split="train")    
+        ds = load_dataset(args.dataset_path, split="train")
     print(ds)
 
     texts = []
