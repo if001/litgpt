@@ -60,6 +60,8 @@ class Tokenizer:
             return self.processor.get_vocab_size(with_added_tokens=False)
         if self.backend == "sentencepiece":
             return self.processor.vocab_size()
+        if self.backend == "hf":
+            return self.processor.vocab_size
         raise RuntimeError
 
     def token_to_id(self, token: str) -> int:
@@ -67,6 +69,8 @@ class Tokenizer:
             id_ = self.processor.token_to_id(token)
         elif self.backend == "sentencepiece":
             id_ = self.processor.piece_to_id(token)
+        elif self.backend == 'hf':
+            id_ = self.processor.encode(token, add_special_tokens=False)[0]
         else:
             raise RuntimeError
         if id_ is None:
@@ -80,6 +84,8 @@ class Tokenizer:
             config = json.load(fp)
         if "add_bos_token" in config:
             return config["add_bos_token"]
+        if "llm-jp-13b-v2.0" in checkpoint_dir:
+            return True
         # if `add_bos_token` isn't in the config file, but LLaMA tokenizer is used - return True.
         # ex: https://huggingface.co/stabilityai/StableBeluga2/blob/main/tokenizer_config.json#L2
         return config.get("tokenizer_class") == "LlamaTokenizer"
@@ -95,6 +101,8 @@ class Tokenizer:
         if self.backend == "huggingface":
             tokens = self.processor.encode(string).ids
         elif self.backend == "sentencepiece":
+            tokens = self.processor.encode(string)
+        elif self.backend == "hf":
             tokens = self.processor.encode(string)
         else:
             raise RuntimeError
