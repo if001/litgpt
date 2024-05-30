@@ -5,7 +5,7 @@ import argparse
 def parse():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--repo_id', required=True)
+    parser.add_argument('--dataset_path', required=True)
     parser.add_argument('--output_file', required=True)
     parser.add_argument('--key', default='text')
     args = parser.parse_args()
@@ -15,8 +15,10 @@ def parse():
 def main():
     args = parse()
     print('load', args.repo_id)
-    # ds = load_dataset(args.repo_id, split="train")
-    ds = load_dataset('json', data_files=args.repo_id, split="train")
+    if 'json' in args.dataset_path:
+        ds = load_dataset('json', data_files=args.repo_id, split="train")
+    else:
+        ds = load_dataset(args.repo_id, split="train")    
     print(ds)
 
     texts = []
