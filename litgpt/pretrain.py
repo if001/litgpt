@@ -49,6 +49,7 @@ def format_number(num):
         return str(num)
     
 def show_total_params(model):
+    import numpy as np
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
     params = sum([np.prod(p.size()) for p in model_parameters])    
     print('trainable params: ', format_number(params))
