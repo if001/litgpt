@@ -881,7 +881,7 @@ llama_3 = [
     ),
     dict(
         name="Llama-3-tiny{}",
-        hf_config=dict(org="meta-llama", name="Meta-Llama-3-tiny{}"),
+        hf_config=dict(org="meta-llama", name="Llama-3-8B{}"),
         block_size=4096,
         vocab_size=50570, ## llm-jp
         padded_vocab_size=128256,
