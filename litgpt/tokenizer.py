@@ -10,8 +10,8 @@ import torch
 class Tokenizer:
     def __init__(self, checkpoint_dir: Union[Path, str]) -> None:
         checkpoint_dir = Path(checkpoint_dir)
-        if not checkpoint_dir.exists():
-            raise NotADirectoryError(f"The checkpoint directory does not exist: {str(checkpoint_dir)}")
+        # if not checkpoint_dir.exists():
+        #    raise NotADirectoryError(f"The checkpoint directory does not exist: {str(checkpoint_dir)}")
 
         self.use_bos = self.check_if_bos_token_used(checkpoint_dir)
         self.bos_id = None
