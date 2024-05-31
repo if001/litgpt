@@ -383,8 +383,11 @@ def get_dataloaders(
     data.connect(tokenizer=tokenizer, batch_size=train.micro_batch_size, max_seq_length=block_size)
     with fabric.rank_zero_first():
         data.prepare_data()
+    print('debug 3')
     data.setup()
+    print('debug 4')
     train_dataloader = data.train_dataloader()
+    print('debug 5')
     val_dataloader = data.val_dataloader()
     return train_dataloader, val_dataloader
 
