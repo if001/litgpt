@@ -50,7 +50,7 @@ class Tokenizer:
             # from tokenizers import Tokenizer as HFTokenizer
             from transformers import AutoTokenizer
             self.processor = AutoTokenizer.from_pretrained(checkpoint_dir)
-            self.backend = "huggingface"
+            self.backend = "hf"
             self.bos_id = self.processor.bos_token_id
             self.eos_id = self.processor.eos_token_id
             # raise NotImplementedError
