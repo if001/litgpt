@@ -93,6 +93,7 @@ class Config:
 
     @classmethod
     def from_name(cls, name: str, **kwargs: Any) -> Self:
+        print(configs)
         if name not in name_to_config:
             # search through all `config['hf_config']['name']`
             try:
@@ -1605,4 +1606,3 @@ llama_2_function_calling = [
 configs.extend(llama_2_function_calling)
 
 name_to_config = {config["name"]: config for config in configs}
-print(configs)
