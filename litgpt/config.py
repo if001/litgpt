@@ -881,7 +881,7 @@ llama_3 = [
     ),
     dict(
         name="Llama-3-tiny{}",
-        hf_config=dict(org="meta-llama", name="Llama-3-8B{}"),
+        hf_config=dict(org="meta-llama", name="Llama-3-tiny{}"),
         block_size=4096,
         vocab_size=50570, ## llm-jp
         padded_vocab_size=128256,
@@ -1605,3 +1605,4 @@ llama_2_function_calling = [
 configs.extend(llama_2_function_calling)
 
 name_to_config = {config["name"]: config for config in configs}
+print(configs)
