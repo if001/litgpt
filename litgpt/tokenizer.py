@@ -47,8 +47,9 @@ class Tokenizer:
                 if self.eos_id is None:
                     self.eos_id = config.get("eos_token_id")
         else:
-            from tokenizers import Tokenizer as HFTokenizer
-            self.processor = HFTokenizer.from_pretrained(checkpoint_dir)
+            # from tokenizers import Tokenizer as HFTokenizer
+            from transformers import AutoTokenizer
+            self.processor = AutoTokenizer.from_pretrained(checkpoint_dir)
             self.backend = "huggingface"
             self.bos_id = self.processor.bos_token_id
             self.eos_id = self.processor.eos_token_id
