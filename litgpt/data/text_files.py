@@ -63,7 +63,7 @@ class TextFiles(DataModule):
             assert len(train_files) > 1, f"Expected at least two .txt files in {train_files}"
             val_files, *train_files = train_files
             val_files = [val_files]
-
+        print('debug data 1')
         # It's ok to use almost all CPUs here because this runs in a single process
         num_workers = os.cpu_count() - 1
         use_workers = min(num_workers, len(train_files))
@@ -89,17 +89,18 @@ class TextFiles(DataModule):
 
     def train_dataloader(self) -> DataLoader:
         from litdata.streaming import StreamingDataLoader, StreamingDataset, TokensLoader
-
+        print('data debug1')
         train_dataset = StreamingDataset(
             input_dir=str(self.out_path_train),
             item_loader=TokensLoader(block_size=self.max_seq_length),
             shuffle=True,
             drop_last=True,
         )
-
+        print('data debug2')
         train_dataloader = StreamingDataLoader(
             train_dataset, batch_size=self.batch_size, pin_memory=True, num_workers=self.num_workers, drop_last=True
         )
+        print('data debug3')
         return train_dataloader
 
     def val_dataloader(self) -> DataLoader:
