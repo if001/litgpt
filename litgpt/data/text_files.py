@@ -78,6 +78,9 @@ class TextFiles(DataModule):
             )
         print('debug data 2')
         use_workers = min(num_workers, len(val_files))
+        print('val_files', val_files)
+        print('use_workers', use_workers)
+        print('self.out_path_val', self.out_path_val)
         if not Path(self.out_path_val).is_dir():
             validate_tokenizer(self.tokenizer)
             optimize(
@@ -87,6 +90,7 @@ class TextFiles(DataModule):
                 num_workers=use_workers,
                 chunk_bytes="50MB",
             )
+        print('debug data 3')
 
     def train_dataloader(self) -> DataLoader:
         from litdata.streaming import StreamingDataLoader, StreamingDataset, TokensLoader
