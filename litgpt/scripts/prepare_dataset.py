@@ -20,11 +20,16 @@ def main():
     else:
         ds = load_dataset(args.dataset_path, split="train")
     print(ds)
-
+    
     texts = []
     for v in ds:
-        texts.append(v[args.key]+"\n")
-    
+        text = v[args.key]
+        new_text = ''
+        for v in text.split('\n'):
+            if len(v) > 20:
+                new_text += v + '\n'
+        texts.append(new_text)
+
     with open(args.output_file, 'w') as f:
         f.writelines(texts)
     print('end...', args.output_file)
