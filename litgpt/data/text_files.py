@@ -63,9 +63,10 @@ class TextFiles(DataModule):
             assert len(train_files) > 1, f"Expected at least two .txt files in {train_files}"
             val_files, *train_files = train_files
             val_files = [val_files]
-        print('debug data 1')
+
         # It's ok to use almost all CPUs here because this runs in a single process
-        num_workers = os.cpu_count() - 1
+        # num_workers = os.cpu_count() - 1
+        num_workers = 1
         use_workers = min(num_workers, len(train_files))
         if not Path(self.out_path_train).is_dir():
             validate_tokenizer(self.tokenizer)
@@ -76,11 +77,7 @@ class TextFiles(DataModule):
                 num_workers=use_workers,
                 chunk_bytes="50MB",
             )
-        print('debug data 2')
         use_workers = min(num_workers, len(val_files))
-        print('val_files', val_files)
-        print('use_workers', use_workers)
-        print('self.out_path_val', self.out_path_val)
         if not Path(self.out_path_val).is_dir():
             validate_tokenizer(self.tokenizer)
             optimize(
@@ -90,7 +87,6 @@ class TextFiles(DataModule):
                 num_workers=use_workers,
                 chunk_bytes="50MB",
             )
-        print('debug data 3')
 
     def train_dataloader(self) -> DataLoader:
         from litdata.streaming import StreamingDataLoader, StreamingDataset, TokensLoader
