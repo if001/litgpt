@@ -130,6 +130,7 @@ def setup(
         strategy = "auto"
     fabric = L.Fabric(devices=devices, strategy=strategy, precision=precision, loggers=[logger])
     fabric.launch()
+    fabric.print('world_size:', fabric.world_size)
 
     fabric.print(pprint.pformat(hparams))
     if logger_name in ("tensorboard", "wandb"):
