@@ -250,6 +250,7 @@ def fit(
 
     throughput = ThroughputMonitor(fabric, window_size=5)
 
+    fabric.print('debug1')
     with torch.device("meta"):
         meta_model = GPT(model.config)
         x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
@@ -258,7 +259,7 @@ def fit(
         measured_flops = measure_flops(meta_model, model_fwd, model_loss)
         fabric.print(f"Measured TFLOPs: {measured_flops * fabric.world_size / 1e12:.2f}")
         del meta_model, x
-
+    fabric.print('debug2')
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
     max_iters = max_tokens_per_device // tokens_per_iter
@@ -271,9 +272,10 @@ def fit(
     )
     fabric.barrier()
     total_t0 = time.perf_counter()
-
+    fabric.print('debug3')
     warmup_iters = train.warmup_iters(devices, max_iters, train_dataloader)
 
+    fabric.print('debug4')
     for train_data in train_iterator:
         if state["iter_num"] >= max_iters:
             break
