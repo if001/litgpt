@@ -363,12 +363,13 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
 
     losses = []
     for k, batch in enumerate(val_dataloader):
-        print('input_ids', input_ids.size())
-        print('model.max_seq_length', model.max_seq_length)
         if k >= max_iters:
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
+        print('input_ids', input_ids.size())
+        print('model.max_seq_length', model.max_seq_length)
+
         logits = model(input_ids)
         loss = chunked_cross_entropy(logits, targets)
         losses.append(loss)
