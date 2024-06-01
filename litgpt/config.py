@@ -883,19 +883,19 @@ llama_3 = [
     dict(
         name="Llama-3-tiny{}",
         hf_config=dict(org="meta-llama", name="Llama-3-tiny{}"),
-        block_size=2048,
+        block_size=1024,
         vocab_size=50570, ## llm-jp
         padded_vocab_size=50570,
         n_layer=2,
         n_head=4,
-        n_embd=2048,
+        n_embd=1024,
         n_query_groups=4,
         rotary_percentage=1.0,
         parallel_residual=False,
         bias=False,
         norm_class_name="RMSNorm",
         mlp_class_name="LLaMAMLP",
-        intermediate_size=4096,
+        intermediate_size=2048,
         rope_base=500000,
     ),
     dict(
