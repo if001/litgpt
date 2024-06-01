@@ -178,7 +178,7 @@ def main(
     t0 = time.perf_counter()
     with fabric.init_module(empty_init=True):
         model = GPT(config)
-
+        print('model', model)
     initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
 
     if train.tie_embeddings:
@@ -381,6 +381,7 @@ def get_dataloaders(
     fabric: L.Fabric, data: DataModule, tokenizer: Tokenizer, train: TrainArgs, block_size: int
 ) -> Tuple[DataLoader, DataLoader]:
     data.connect(tokenizer=tokenizer, batch_size=train.micro_batch_size, max_seq_length=block_size)
+    print('debug 2')
     with fabric.rank_zero_first():
         data.prepare_data()
     print('debug 3')
