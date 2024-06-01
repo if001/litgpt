@@ -288,9 +288,6 @@ def fit(
         input_ids = train_data[:, 0 : model.max_seq_length].contiguous().long()
         targets = train_data[:, 1 : (model.max_seq_length + 1)].contiguous().long()
 
-        print('input_ids', input_ids.size())
-        print('model.max_seq_length', model.max_seq_length)
-
         is_accumulating = state["iter_num"] % train.gradient_accumulation_iters(devices) != 0
         with fabric.no_backward_sync(model, enabled=is_accumulating):
             logits = model(input_ids)
@@ -366,6 +363,8 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
 
     losses = []
     for k, batch in enumerate(val_dataloader):
+        print('input_ids', input_ids.size())
+        print('model.max_seq_length', model.max_seq_length)
         if k >= max_iters:
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
