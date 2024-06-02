@@ -367,8 +367,6 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
-        print('input_ids', input_ids.size())
-        print('model.max_seq_length', model.max_seq_length)
 
         logits = model(input_ids)
         loss = chunked_cross_entropy(logits, targets)
@@ -384,14 +382,10 @@ def get_dataloaders(
     fabric: L.Fabric, data: DataModule, tokenizer: Tokenizer, train: TrainArgs, block_size: int
 ) -> Tuple[DataLoader, DataLoader]:
     data.connect(tokenizer=tokenizer, batch_size=train.micro_batch_size, max_seq_length=block_size)
-    print('debug 2')
     with fabric.rank_zero_first():
         data.prepare_data()
-    print('debug 3')
     data.setup()
-    print('debug 4')
     train_dataloader = data.train_dataloader()
-    print('debug 5')
     val_dataloader = data.val_dataloader()
     return train_dataloader, val_dataloader
 
