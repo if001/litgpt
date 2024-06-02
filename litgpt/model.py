@@ -71,7 +71,6 @@ class GPT(nn.Module):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, idx: torch.Tensor, input_pos: Optional[torch.Tensor] = None) -> torch.Tensor:
-        print('input size: ', idx.size())
         T = idx.size(1)
         if self.max_seq_length < T:
             raise ValueError(f"Cannot forward sequence of length {T}, max seq length is only {self.max_seq_length}.")
@@ -86,8 +85,9 @@ class GPT(nn.Module):
             cos = self.cos[:T]
             sin = self.sin[:T]
             mask = None
-
+        print('debug idx size', idx.size())
         x = self.transformer.wte(idx)  # token embeddings of shape (b, t, n_embd)
+        print('debug x size', x.size())
         if self.config.scale_embeddings:
             x = x * (self.config.n_embd**0.5)
 
