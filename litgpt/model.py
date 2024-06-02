@@ -86,6 +86,7 @@ class GPT(nn.Module):
             sin = self.sin[:T]
             mask = None
         print('debug idx size', idx.size())
+        print('debug wte ', self.transformer.wte)
         x = self.transformer.wte(idx)  # token embeddings of shape (b, t, n_embd)
         print('debug x size', x.size())
         if self.config.scale_embeddings:
