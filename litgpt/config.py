@@ -884,8 +884,8 @@ llama_3 = [
         name="Llama-3-tiny{}",
         hf_config=dict(org="meta-llama", name="Llama-3-tiny{}"),
         block_size=1024,
-        vocab_size=50570, ## llm-jp
-        padded_vocab_size=50570,
+        vocab_size=96867, ## llm-jp
+        padded_vocab_size=96867,
         n_layer=2,
         n_head=4,
         n_embd=1024,
@@ -902,8 +902,8 @@ llama_3 = [
         name="Llama-3-tiny-tiny{}",
         hf_config=dict(org="meta-llama", name="Llama-3-tiny-tiny{}"),
         block_size=512,
-        vocab_size=50570, ## llm-jp
-        padded_vocab_size=50570,
+        vocab_size=96867, ## llm-jp
+        padded_vocab_size=96867,
         n_layer=2,
         n_head=4,
         n_embd=512,
@@ -967,6 +967,24 @@ gemma = [
         gelu_approximate="tanh",
         intermediate_size=24576,
     ),
+    dict(
+        name="Gemma-tiny",
+        hf_config=dict(org="google", name="gemma-tiny"),
+        scale_embeddings=True,
+        vocab_size=96867,
+        padding_multiple=64,
+        n_embd=1024,
+        n_layer=9,
+        n_head=4,
+        n_query_groups=1,
+        rotary_percentage=1.0,
+        parallel_residual=False,
+        bias=False,
+        norm_class_name="RMSNorm",
+        mlp_class_name="GemmaMLP",
+        gelu_approximate="tanh",
+        intermediate_size=8192,
+    ),    
 ]
 configs.extend(gemma)
 for c in gemma:
