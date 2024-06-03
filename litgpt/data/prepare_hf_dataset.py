@@ -73,6 +73,7 @@ def prepare(
     start_time = time.time()
     data_processor.run(data_recipe)
     elapsed_time = time.time() - start_time
+    print(f"total tokens:", data_recipe.total_tokens)
     print(f"Time taken: {elapsed_time:.2f} seconds")
 
 
