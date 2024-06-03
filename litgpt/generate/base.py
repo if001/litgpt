@@ -203,7 +203,9 @@ def main(
     )
 
     prompt = prompt_style.apply(prompt)
+    print('raw prompt: ', prompt)
     encoded = tokenizer.encode(prompt, device=fabric.device)
+    print('encoded: ', encoded)
     prompt_length = encoded.size(0)
     max_returned_tokens = prompt_length + max_new_tokens
 
