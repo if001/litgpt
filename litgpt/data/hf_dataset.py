@@ -32,16 +32,20 @@ class HFData(DataModule):
     num_workers: int = 4
     """The number of workers to use for data loading."""
 
+    out_path_train: str = ""
+    out_path_val: str = ""
+
     tokenizer: Optional[Tokenizer] = field(default=None, init=False, repr=False)
     batch_size: int = field(default=1, init=False, repr=False)
     max_seq_length: int = field(default=-1, init=False, repr=False)
 
     def __post_init__(self) -> None:
-        self.out_path_train = self.train_data_path / "train"
-        if self.val_data_path is None:
-            self.out_path_val = self.train_data_path / "val"
-        else:
-            self.out_path_val = Path(self.val_data_path) / "val"
+        assert self.out_path_train != ""
+        assert self.out_path_val != ""
+        os.makedirs(self.out_path_train, exist_ok=True)
+        os.makedirs(self.out_path_val, exist_ok=True)
+        self.out_path_train = Path(self.out_path_train)
+        self.out_path_val = Path(self.out_path_val)
 
     def connect(self, tokenizer: Optional[Tokenizer] = None, batch_size: int = 1, max_seq_length: int = -1) -> None:
         self.tokenizer = tokenizer
