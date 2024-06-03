@@ -103,6 +103,7 @@ def main() -> None:
 
     # register level 1 subcommands and level 2 subsubcommands. If there are more levels in the future we would want to
     # refactor this to do BFS traversal for registration
+    print('debug1')
     subcommands = root_parser.add_subcommands()
     subcommand_to_parser = {}
     for k, v in parser_data.items():
@@ -112,6 +113,7 @@ def main() -> None:
         else:
             subcommand_to_parser[k] = subcommand_parser
         subcommands.add_subcommand(k, subcommand_parser, help=v["help"])
+    print('debug2')
     for subcommand, parser in subcommand_to_parser.items():
         subcommands = parser.add_subcommands()
         for k, v in parser_data[subcommand].items():
@@ -123,10 +125,10 @@ def main() -> None:
                 subsubcommand_parser.set_defaults({"optimizer": "AdamW"})
             subsubcommand_parser.add_function_arguments(v["fn"], skip={"optimizer"})
             subcommands.add_subcommand(k, subsubcommand_parser, help=v["help"])
-
+    print('debug3')
     args = root_parser.parse_args()
     args = root_parser.instantiate_classes(args)
-
+    print('debug4')
     subcommand = args.get("subcommand")
     subargs = args.get(subcommand)
     subsubcommand = subargs.get("subcommand")
