@@ -35,4 +35,5 @@ __all__ = [
     "TinyLlama",
     "TinyStories",
     "get_sft_collate_fn",
+    "HFData"
 ]
