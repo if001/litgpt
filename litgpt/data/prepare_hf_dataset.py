@@ -26,7 +26,7 @@ class JsonlDataRecipe(DataChunkRecipe):
         ds = load_dataset('json', data_files=filepath, split="train")
         for v in ds:
             text = v['text']
-            text_ids = self.tokenizer.encode(text, bos=True, eos=True)
+            text_ids = self.tokenizer.encode(text, bos=False, eos=True)
             self.total_tokens += len(text_ids)
             yield text_ids
 
