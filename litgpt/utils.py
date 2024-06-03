@@ -62,12 +62,19 @@ def reset_parameters(module: nn.Module) -> None:
 
 
 def check_valid_checkpoint_dir(checkpoint_dir: Path, model_filename: str = "lit_model.pth") -> None:
+    # files = {
+    #     model_filename: (checkpoint_dir / model_filename).is_file(),
+    #     "model_config.yaml": (checkpoint_dir / "model_config.yaml").is_file(),
+    #     "tokenizer.json or tokenizer.model": (checkpoint_dir / "tokenizer.json").is_file()
+    #     or (checkpoint_dir / "tokenizer.model").is_file(),
+    #     "tokenizer_config.json": (checkpoint_dir / "tokenizer_config.json").is_file(),
+    # }
     files = {
         model_filename: (checkpoint_dir / model_filename).is_file(),
         "model_config.yaml": (checkpoint_dir / "model_config.yaml").is_file(),
-        "tokenizer.json OR tokenizer.model": (checkpoint_dir / "tokenizer.json").is_file()
-        or (checkpoint_dir / "tokenizer.model").is_file(),
-        "tokenizer_config.json": (checkpoint_dir / "tokenizer_config.json").is_file(),
+        # "tokenizer.json OR tokenizer.model": (checkpoint_dir / "tokenizer.json").is_file()
+        # or (checkpoint_dir / "tokenizer.model").is_file(),
+        # "tokenizer_config.json": (checkpoint_dir / "tokenizer_config.json").is_file(),
     }
     if checkpoint_dir.is_dir():
         if all(files.values()):
