@@ -14,7 +14,7 @@ from litgpt.data import DataModule
 
 
 @dataclass
-class HFDataset(DataModule):
+class BinDataset(DataModule):
     """The TextFile data module used for pretraining.
 
     Reads in text data from plaintext files contained in a data folder
@@ -32,20 +32,12 @@ class HFDataset(DataModule):
     num_workers: int = 4
     """The number of workers to use for data loading."""
 
-    out_path_train: str = ""
-    out_path_val: str = ""
-
     tokenizer: Optional[Tokenizer] = field(default=None, init=False, repr=False)
     batch_size: int = field(default=1, init=False, repr=False)
     max_seq_length: int = field(default=-1, init=False, repr=False)
 
     def __post_init__(self) -> None:
-        assert self.out_path_train != ""
-        assert self.out_path_val != ""
-        os.makedirs(self.out_path_train, exist_ok=True)
-        os.makedirs(self.out_path_val, exist_ok=True)
-        self.out_path_train = Path(self.out_path_train)
-        self.out_path_val = Path(self.out_path_val)
+        pass
 
     def connect(self, tokenizer: Optional[Tokenizer] = None, batch_size: int = 1, max_seq_length: int = -1) -> None:
         self.tokenizer = tokenizer
@@ -53,38 +45,12 @@ class HFDataset(DataModule):
         self.max_seq_length = max_seq_length + 1  # Increase by one because we need the next token as well
 
     def prepare_data(self) -> None:
-        from litdata import optimize
-
-        train_files = self.train_data_path.split(",")
-        val_files = self.val_data_path.split(",")
-        # It's ok to use almost all CPUs here because this runs in a single process
-        num_workers = os.cpu_count() - 1
-        # num_workers = 1
-        use_workers = min(num_workers, len(train_files))
-        if not Path(self.out_path_train).is_dir():
-            validate_tokenizer(self.tokenizer)
-            optimize(
-                fn=partial(tokenize, tokenizer=self.tokenizer),
-                inputs=train_files,
-                output_dir=str(self.out_path_train),
-                num_workers=use_workers,
-                chunk_bytes="50MB",
-            )
-        use_workers = min(num_workers, len(val_files))
-        if not Path(self.out_path_val).is_dir():
-            validate_tokenizer(self.tokenizer)
-            optimize(
-                fn=partial(tokenize, tokenizer=self.tokenizer),
-                inputs=val_files,
-                output_dir=str(self.out_path_val),
-                num_workers=use_workers,
-                chunk_bytes="50MB",
-            )
+        pass
 
     def train_dataloader(self) -> DataLoader:
         from litdata.streaming import StreamingDataLoader, StreamingDataset, TokensLoader
         train_dataset = StreamingDataset(
-            input_dir=str(self.out_path_train),
+            input_dir=str(self.train_data_path),
             item_loader=TokensLoader(block_size=self.max_seq_length),
             shuffle=True,
             drop_last=True,
@@ -98,7 +64,7 @@ class HFDataset(DataModule):
         from litdata.streaming import StreamingDataset, TokensLoader
 
         val_dataset = StreamingDataset(
-            input_dir=str(self.out_path_val),
+            input_dir=str(self.train_data_path),
             item_loader=TokensLoader(block_size=self.max_seq_length),
             shuffle=True,
             # Consider setting to False, but we would lose some samples due to truncation when world size > 1
