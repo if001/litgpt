@@ -49,7 +49,9 @@ def prepare(
                 name = str(tmp_dir /f'{tmp_name}_{idx}.jsonl')
                 end = num+dataset_max_len if len(ds) < num+dataset_max_len else len(ds)
                 print('debug', num, end)
-                ds.select(range(num, end)).to_json(name, force_ascii=False)
+                _tmp = ds.select(range(num, end))
+                print('debug 2', len(_tmp))
+                _tmp.to_json(name, force_ascii=False)
         else:
             ds.to_json(str(tmp_dir /f'{tmp_name}.jsonl'), force_ascii=False)
 
