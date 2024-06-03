@@ -144,6 +144,7 @@ def main(
     quantize: Optional[Literal["bnb.nf4", "bnb.nf4-dq", "bnb.fp4", "bnb.fp4-dq", "bnb.int8"]] = None,
     precision: Optional[str] = None,
     compile: bool = False,
+    tokenizer_id: Optional[str] = None
 ) -> None:
     """Generates text samples based on a pre-trained model and tokenizer.
 
@@ -193,7 +194,10 @@ def main(
 
     checkpoint_path = checkpoint_dir / "lit_model.pth"
 
-    tokenizer = Tokenizer(checkpoint_dir)
+    if tokenizer_id:
+        tokenizer = Tokenizer(tokenizer_id)
+    else:
+        tokenizer = Tokenizer(checkpoint_dir)
     prompt_style = (
         load_prompt_style(checkpoint_dir) if has_prompt_style(checkpoint_dir) else PromptStyle.from_config(config)
     )
