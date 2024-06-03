@@ -44,6 +44,7 @@ def prepare(
     dataset_ids = dataset_ids.split(',')
     from datasets import load_dataset
     for id in dataset_ids:
+        print('load...', id)
         if use_cache == True:
             print('use cache...')
             continue
