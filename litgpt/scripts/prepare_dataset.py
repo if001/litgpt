@@ -1,3 +1,4 @@
+import os
 from datasets import load_dataset
 import argparse
 
@@ -14,6 +15,9 @@ def parse():
 
 def main():
     args = parse()
+    dirname = os.path.dirname(args.output_file)
+    os.makedirs(dirname, exist_ok=True)
+
     print('load', args.dataset_path)
     if 'json' in args.dataset_path:
         ds = load_dataset('json', data_files=args.dataset_path, split="train")
