@@ -14,7 +14,7 @@ from litgpt.data import DataModule
 
 
 @dataclass
-class HFData(DataModule):
+class HFDataset(DataModule):
     """The TextFile data module used for pretraining.
 
     Reads in text data from plaintext files contained in a data folder
@@ -32,8 +32,8 @@ class HFData(DataModule):
     num_workers: int = 4
     """The number of workers to use for data loading."""
 
-    out_path_train: str = ""
-    out_path_val: str = ""
+    output_path_train: str = ""
+    output_path_val: str = ""
 
     tokenizer: Optional[Tokenizer] = field(default=None, init=False, repr=False)
     batch_size: int = field(default=1, init=False, repr=False)
