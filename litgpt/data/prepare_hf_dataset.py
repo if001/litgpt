@@ -44,7 +44,8 @@ def prepare(
     dataset_ids = dataset_ids.split(',')
     from datasets import load_dataset
     for id in dataset_ids:
-        if use_cache:
+        if use_cache == True:
+            print('use cache...')
             continue
         ds = load_dataset(id, split="train")
         tmp_name = id.split('/')[-1]
