@@ -35,6 +35,7 @@ def prepare(
     tokenizer_path: Path = Path("checkpoints/Llama-2-7b-hf/"),
     chunk_size: int = (2049 * 16384),
     fast_dev_run: bool = False,
+    dataset_max_len: int = -1
 ) -> None:
     assert dataset_ids != ""
     dataset_ids = dataset_ids.split(',')
@@ -42,7 +43,13 @@ def prepare(
     for id in dataset_ids:
         ds = load_dataset(id, split="train")
         tmp_name = id.split('/')[-1]
-        ds.to_json(str(tmp_dir /f'{tmp_name}.jsonl'), force_ascii=False)
+        if dataset_max_len != -1 and len(ds) > dataset_max_len:
+            print('dataset splited...', len(ds), int(len(ds)/dataset_max_len))
+            for idx, num in enumerate(range(0, len(ds), dataset_max_len)):
+                name = str(tmp_dir /f'{tmp_name}_{idx}.jsonl')
+                ds.select(range(num, num+dataset_max_len)).to_json(name, force_ascii=False)
+        else:
+            ds.to_json(str(tmp_dir /f'{tmp_name}.jsonl'), force_ascii=False)
 
     from litdata.processing.data_processor import DataProcessor
 
