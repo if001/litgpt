@@ -15,6 +15,7 @@ from litgpt.data.text_files import TextFiles
 from litgpt.data.tinyllama import TinyLlama
 from litgpt.data.tinystories import TinyStories
 from litgpt.data.openwebtext import OpenWebText
+from litgpt.data.hf_dataset import HFData
 
 
 __all__ = [
