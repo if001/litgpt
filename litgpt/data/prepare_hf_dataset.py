@@ -14,6 +14,7 @@ class JsonlDataRecipe(DataChunkRecipe):
     def __init__(self, tokenizer: Tokenizer, chunk_size: int):
         super().__init__(chunk_size)
         self.tokenizer = tokenizer
+        self.is_generator = False
 
     def prepare_structure(self, input_dir):
         files = Path(input_dir).rglob("*.jsonl")
