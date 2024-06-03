@@ -974,7 +974,7 @@ gemma = [
         vocab_size=96867,
         padding_multiple=64,
         n_embd=1024,
-        n_layer=9,
+        n_layer=4,
         n_head=4,
         n_query_groups=1,
         rotary_percentage=1.0,
@@ -983,7 +983,7 @@ gemma = [
         norm_class_name="RMSNorm",
         mlp_class_name="GemmaMLP",
         gelu_approximate="tanh",
-        intermediate_size=8192,
+        intermediate_size=4096,
     ),    
 ]
 configs.extend(gemma)
