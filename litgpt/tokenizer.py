@@ -104,7 +104,7 @@ class Tokenizer:
         elif self.backend == "sentencepiece":
             tokens = self.processor.encode(string)
         elif self.backend == "hf":
-            tokens = self.processor.encode(string)
+            tokens = self.processor.encode(string, add_special_tokens=False)
         else:
             raise RuntimeError
         if bos or (bos is None and self.use_bos):
