@@ -15,6 +15,7 @@ class JsonlDataRecipe(DataChunkRecipe):
         super().__init__(chunk_size)
         self.tokenizer = tokenizer
         self.is_generator = True
+        self.total_tokens = 0
 
     def prepare_structure(self, input_dir):
         files = Path(input_dir).rglob("*.jsonl")
@@ -25,7 +26,8 @@ class JsonlDataRecipe(DataChunkRecipe):
         ds = load_dataset('json', data_files=filepath, split="train")
         for v in ds:
             text = v['text']
-            text_ids = self.tokenizer.encode(text, bos=False, eos=True)
+            text_ids = self.tokenizer.encode(text, bos=True, eos=True)
+            self.total_tokens += len(text_ids)
             yield text_ids
 
 def prepare(
@@ -35,12 +37,15 @@ def prepare(
     tokenizer_path: Path = Path("checkpoints/Llama-2-7b-hf/"),
     chunk_size: int = (2049 * 16384),
     fast_dev_run: bool = False,
-    dataset_max_len: int = -1
+    dataset_max_len: int = -1,
+    use_cache: bool = False
 ) -> None:
     assert dataset_ids != ""
     dataset_ids = dataset_ids.split(',')
     from datasets import load_dataset
     for id in dataset_ids:
+        if use_cache:
+            continue
         ds = load_dataset(id, split="train")
         tmp_name = id.split('/')[-1]
         if dataset_max_len != -1 and len(ds) > dataset_max_len:
