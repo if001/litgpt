@@ -47,10 +47,11 @@ def prepare(
             print('dataset splited...', len(ds), int(len(ds)/dataset_max_len))
             for idx, num in enumerate(range(0, len(ds), dataset_max_len)):
                 name = str(tmp_dir /f'{tmp_name}_{idx}.jsonl')
+                print('debug 0:', num, dataset_max_len)
                 end = num+dataset_max_len if len(ds) < num+dataset_max_len else len(ds)
-                print('debug', num, end)
+                print('debug 1:', num, end)
                 _tmp = ds.select(range(num, end))
-                print('debug 2', len(_tmp))
+                print('debug 2:', len(_tmp))
                 _tmp.to_json(name, force_ascii=False)
         else:
             ds.to_json(str(tmp_dir /f'{tmp_name}.jsonl'), force_ascii=False)
