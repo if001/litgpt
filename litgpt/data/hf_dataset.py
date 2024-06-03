@@ -21,9 +21,9 @@ class HFData(DataModule):
     and provides training and validation dataloaders that return batches of tokens.
     Every sample is set to a fixed length.
     """
-    train_data_path: Path
+    train_data_path: str
     """The path to the data directory used for training that contains .txt files"""
-    val_data_path: Optional[Path] = None
+    val_data_path: Optional[str] = None
     """The path to the data directory used for validation that
     contains .txt files. Splits off data for validation from the
     training set if None."""
