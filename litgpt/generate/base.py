@@ -193,7 +193,7 @@ def main(
     config = Config.from_file(checkpoint_dir / "model_config.yaml")
 
     checkpoint_path = checkpoint_dir / "lit_model.pth"
-
+    print('tokenizer_id', tokenizer_id)
     if tokenizer_id:
         tokenizer = Tokenizer(tokenizer_id)
     else:
