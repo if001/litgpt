@@ -268,6 +268,7 @@ def fit(
 
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
+    print('train_dataloader', len(train_dataloader))
     train_iterator = CycleIterator(train_dataloader)
 
     running_loss = RunningMean(window=train.gradient_accumulation_iters(devices), sync_on_compute=False).to(
