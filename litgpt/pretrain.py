@@ -178,14 +178,14 @@ def main(
     t0 = time.perf_counter()
     with fabric.init_module(empty_init=True):
         model = GPT(config)
-        print('model', model)
+        fabric.print('model', model)
     initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
 
     if train.tie_embeddings:
         model.transformer.wte.weight = model.lm_head.weight
     if train.max_seq_length:
         model.max_seq_length = train.max_seq_length
-
+    fabric.print(f"max_seq_len: {model.max_seq_length}")
     fabric.print(f"Time to instantiate model: {time.perf_counter() - t0:.02f} seconds.")
     fabric.print(f"Total parameters: {num_parameters(model):,}")
 
