@@ -281,10 +281,10 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if train_iterator.epoch > max_epochs: ## epoch base
+        if train_iterator.epoch >= max_epochs: ## epoch base
             print('reach max epoch, done...')
             break
-        if state["step_count"] > max_steps: ## step base
+        if state["step_count"] >= max_steps: ## step base
             print('reach max steps, done...')
             break
         # determine and set the learning rate for this iteration
