@@ -262,7 +262,7 @@ def fit(
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
     max_iters = max_tokens_per_device // tokens_per_iter
-    
+
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
     train_iterator = CycleIterator(train_dataloader)
@@ -278,15 +278,15 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if getattr(train, "epochs", -1) > train_iterator.epoch : ## epoch base
+        if train_iterator.epoch > getattr(train, "epochs", -1): ## epoch base
             print('reach max epoch, done...')
             break
-        if getattr(train, "max_steps", -1) > state["step_count"]: ## step base
+        if state["step_count"] > getattr(train, "max_steps", -1): ## step base
             print('reach max steps, done...')
             break
         # determine and set the learning rate for this iteration
-        # lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr)
-        lr = get_lr_const(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr)
+        scheduler_type="const"
+        lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr, scheduler_type=scheduler_type)
         for param_group in optimizer.param_groups:
             param_group["lr"] = lr
 
@@ -400,27 +400,24 @@ def get_dataloaders(
 
 
 # learning rate decay scheduler (cosine with linear warmup)
-def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min_lr: float) -> float:
+def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min_lr: float, scheduler_type="cos") -> float:
     # 1) linear warmup for warmup_iters steps
     if it < warmup_iters:
         return learning_rate * it / warmup_iters
     # 2) if it > max_iters, return min learning rate
     if it > max_iters:
         return min_lr
-    # 3) in between, use cosine decay down to min learning rate
-    decay_ratio = (it - warmup_iters) / (max_iters - warmup_iters)
-    assert 0 <= decay_ratio <= 1
-    coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))  # coeff ranges 0..1
-    return min_lr + coeff * (learning_rate - min_lr)
-
-def get_lr_const(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min_lr: float) -> float:
-    # 1) linear warmup for warmup_iters steps
-    if it < warmup_iters:
-        return learning_rate * it / warmup_iters
-    # 2) if it > max_iters, return min learning rate
-    if it > max_iters:
-        return min_lr
-    return learning_rate
+    
+    if scheduler_type == "const":
+        return learning_rate
+    elif scheduler_type == "cos":
+        # 3) in between, use cosine decay down to min learning rate
+        decay_ratio = (it - warmup_iters) / (max_iters - warmup_iters)
+        assert 0 <= decay_ratio <= 1
+        coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))  # coeff ranges 0..1
+        return min_lr + coeff * (learning_rate - min_lr)
+    else:
+        raise ValueError(f'not impl {scheduler_type}')
 
 def initialize_weights(fabric: L.Fabric, model: GPT, n_layer: int, n_embd: int) -> None:
     """GPT-NeoX weight initialization (https://arxiv.org/abs/2204.06745)."""
@@ -481,7 +478,7 @@ def validate_args2(train: TrainArgs, eval: EvalArgs, initial_checkpoint_dir, res
         for name in names:
             if getattr(args, name) is not None:
                 issues.append(f"{__file__} doesn't support the {name!r} argument. This is set in {args}")
-    required = [(train, ["max_norm"])]
+    required = [(train, ["max_tokens", "max_norm"])]
     for args, names in required:
         for name in names:
             if getattr(args, name) is None:
