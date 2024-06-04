@@ -262,8 +262,8 @@ def fit(
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
     max_iters = max_tokens_per_device // tokens_per_iter
-    max_steps = getattr(train, "max_steps", -1) or -1
-    max_epochs = getattr(train, "epochs", -1) or -1
+    max_steps = getattr(train, "max_steps") or float('inf')
+    max_epochs = getattr(train, "epochs") or float('inf')
     fabric.print(f"max_iters: {max_iters}, max_steps: {max_steps}, max_epochs: {max_epochs}")
 
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
