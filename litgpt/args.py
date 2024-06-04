@@ -43,6 +43,9 @@ class TrainArgs:
             )
         if self.lr_warmup_fraction and not (0 <= self.lr_warmup_fraction <= 1):
             raise ValueError("`--train.lr_warmup_fraction` must be between 0 and 1.")
+        
+        if (not self.max_tokens) and (not self.max_steps) and (not self.epochs):
+            raise ValueError("max_tokens or max_steps or  epochs must set")
 
     def gradient_accumulation_iters(self, devices: int) -> int:
         """Number of iterations between gradient synchronizations"""

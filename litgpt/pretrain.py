@@ -168,7 +168,7 @@ def main(
     eval: EvalArgs,
     optimizer: Union[str, Dict],
 ) -> None:
-    validate_args(train, eval, initial_checkpoint_dir, resume)
+    validate_args2(train, eval, initial_checkpoint_dir, resume)
 
     if fabric.global_rank == 0:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -262,6 +262,7 @@ def fit(
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
     max_iters = max_tokens_per_device // tokens_per_iter
+    
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
     train_iterator = CycleIterator(train_dataloader)
@@ -273,10 +274,16 @@ def fit(
     total_t0 = time.perf_counter()
     warmup_iters = train.warmup_iters(devices, max_iters, train_dataloader)
 
-    for train_data in train_iterator:
-        if state["iter_num"] >= max_iters:
+    while True:
+        if state["iter_num"] >= max_iters: ## token base
+            print('reach max iter, done...')
             break
-
+        if getattr(train, "epochs", -1) > train_iterator.epoch : ## epoch base
+            print('reach max epoch, done...')
+            break
+        if getattr(train, "max_steps", -1) > state["step_count"]: ## step base
+            print('reach max steps, done...')
+            break
         # determine and set the learning rate for this iteration
         # lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr)
         lr = get_lr_const(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr)
@@ -286,6 +293,7 @@ def fit(
         state["iter_num"] += 1
         iter_t0 = time.perf_counter()
 
+        train_data = next(train_iterator)
         input_ids = train_data[:, 0 : model.max_seq_length].contiguous().long()
         targets = train_data[:, 1 : (model.max_seq_length + 1)].contiguous().long()
 
@@ -464,3 +472,21 @@ def validate_args(train: TrainArgs, eval: EvalArgs, initial_checkpoint_dir, resu
         issues.append("Can't provide both `--resume` and `--initial_checkpoint_dir`. Choose one.")
     if issues:
         raise ValueError("\n".join(issues))
+
+
+def validate_args2(train: TrainArgs, eval: EvalArgs, initial_checkpoint_dir, resume) -> None:
+    issues = []
+    unsupported = [(eval, ["max_new_tokens"])]
+    for args, names in unsupported:
+        for name in names:
+            if getattr(args, name) is not None:
+                issues.append(f"{__file__} doesn't support the {name!r} argument. This is set in {args}")
+    required = [(train, ["max_norm"])]
+    for args, names in required:
+        for name in names:
+            if getattr(args, name) is None:
+                issues.append(f"{__file__} requires the {name!r} argument. This is set in {args}")
+    if initial_checkpoint_dir and resume:
+        issues.append("Can't provide both `--resume` and `--initial_checkpoint_dir`. Choose one.")
+    if issues:
+        raise ValueError("\n".join(issues))    
