@@ -973,6 +973,7 @@ gemma = [
         scale_embeddings=True,
         vocab_size=96867,
         padding_multiple=64,
+        block_size=1024,  # max_seq_lenとして使われる
         n_embd=1024,
         n_layer=2,
         n_head=4,
