@@ -262,6 +262,9 @@ def fit(
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
     max_iters = max_tokens_per_device // tokens_per_iter
+    max_steps = getattr(train, "max_steps", -1) or -1
+    max_epochs = getattr(train, "epochs", -1) or -1
+    fabric.print(f"max_iters: {max_iters}, max_steps: {max_steps}, max_epochs: {max_epochs}")
 
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
@@ -278,10 +281,10 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if train_iterator.epoch > getattr(train, "epochs", -1): ## epoch base
+        if train_iterator.epoch > max_epochs: ## epoch base
             print('reach max epoch, done...')
             break
-        if state["step_count"] > getattr(train, "max_steps", -1): ## step base
+        if state["step_count"] > max_steps: ## step base
             print('reach max steps, done...')
             break
         # determine and set the learning rate for this iteration
