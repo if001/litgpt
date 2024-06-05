@@ -379,7 +379,7 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
     fabric.barrier()
     fabric.print("Validating ...")
     model.eval()
-
+    fabric.print('len(val_dataloader)', len(val_dataloader))
     losses = []
     for k, batch in enumerate(val_dataloader):
         if k >= max_iters:
