@@ -37,7 +37,7 @@ from litgpt.utils import (
 
 def setup(
     checkpoint_dir: Path = Path("checkpoints/stabilityai/stablelm-base-alpha-3b"),
-    tokenizer: str = "",
+    tokenizer_repo: str = "",
     out_dir: Path = Path("out/finetune/full"),
     precision: Optional[str] = None,
     devices: Union[int, str] = 1,
@@ -102,7 +102,7 @@ def setup(
 
     fabric = L.Fabric(devices=devices, strategy=strategy, precision=precision, loggers=logger)
     fabric.launch()
-    main(fabric, devices, resume, seed, config, data, checkpoint_dir, out_dir, train, eval, optimizer, tokenizer)
+    main(fabric, devices, resume, seed, config, data, checkpoint_dir, out_dir, train, eval, optimizer, tokenizer_repo)
 
 
 def main(
@@ -117,11 +117,11 @@ def main(
     train: TrainArgs,
     eval: EvalArgs,
     optimizer: Union[str, Dict],
-    tokenizer: str
+    tokenizer_repo: str
 ) -> None:
     validate_args(train, eval)
 
-    tokenizer = Tokenizer(tokenizer)
+    tokenizer = Tokenizer(tokenizer_repo)
     train_dataloader, val_dataloader = get_dataloaders(fabric, data, tokenizer, train)
     steps_per_epoch = len(train_dataloader) // train.gradient_accumulation_iters(devices)
     lr_max_steps = min(train.epochs * steps_per_epoch, (train.max_steps or float("inf")))
@@ -153,7 +153,7 @@ def main(
         load_checkpoint(fabric, state["model"], checkpoint_path)
 
     train_time = time.perf_counter()
-    fit(fabric, state, train_dataloader, val_dataloader, devices, resume, checkpoint_dir, out_dir, train, eval, data)
+    fit(fabric, state, train_dataloader, val_dataloader, devices, resume, checkpoint_dir, out_dir, train, eval, data, tokenizer_repo)
     fabric.print(f"Training time: {(time.perf_counter()-train_time):.2f}s")
     if fabric.device.type == "cuda":
         fabric.print(f"Memory used: {torch.cuda.max_memory_allocated() / 1e9:.02f} GB")
@@ -187,11 +187,12 @@ def fit(
     train: TrainArgs,
     eval: EvalArgs,
     data: DataModule,
+    tokenizer_repo: str
 ) -> None:
     model = state["model"]
     optimizer = state["optimizer"]
     scheduler = state["scheduler"]
-    tokenizer = Tokenizer(checkpoint_dir)
+    tokenizer = Tokenizer(tokenizer_repo)
     longest_seq_length, longest_seq_ix = get_longest_seq_length(train_dataloader.dataset)
     model.max_seq_length = min(longest_seq_length, train.max_seq_length or float("inf"))
     fabric.print(
