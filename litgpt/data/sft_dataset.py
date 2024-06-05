@@ -30,7 +30,7 @@ def format(ds):
     return dict({"instruct": text, "output": output})
 
 @dataclass
-class SFTDataset(Alpaca):
+class SFTDatasetHF(Alpaca):
     """Dolly data module for supervised finetuning."""
 
     mask_prompt: bool = False
