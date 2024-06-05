@@ -65,7 +65,6 @@ class SFTDatasetHF(Alpaca):
 
         train_data = []
         for v in ds['train']:
-            print(format(v))
             train_data.append(format(v))
 
         test_data = []
