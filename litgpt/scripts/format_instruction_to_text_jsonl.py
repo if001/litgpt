@@ -55,8 +55,11 @@ def main():
         example['text'] = text
         return example
     ds = ds.map(to_text)
+    print('ds', ds)
     remove_col = ds.column_names.remove('text')
+    print('remove_col', remove_col)
     ds = ds.remove_columns(remove_col)
+    print('ds', ds)
     ds.to_json(args.output_file, force_ascii=False)
     print('end...', args.output_file)
 
