@@ -16,7 +16,7 @@ from litgpt.data.tinyllama import TinyLlama
 from litgpt.data.tinystories import TinyStories
 from litgpt.data.openwebtext import OpenWebText
 from litgpt.data.bin_dataset import BinDataset
-from litgpt.data.sft_dataset import SFTDataset
+from litgpt.data.sft_dataset import SFTDatasetHF
 
 
 __all__ = [
@@ -38,5 +38,5 @@ __all__ = [
     "TinyStories",
     "get_sft_collate_fn",
     "BinDataset",
-    "SFTDataset"
+    "SFTDatasetHF"
 ]
