@@ -428,7 +428,7 @@ def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min
         coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))  # coeff ranges 0..1
         return min_lr + coeff * (learning_rate - min_lr)
     elif scheduler_type == "exp":
-        _tmp = 0.05
+        _tmp = 0.005
         f = math.exp(-1 * (it - stable_train_step) * _tmp)
         return f * learning_rate
     else:
