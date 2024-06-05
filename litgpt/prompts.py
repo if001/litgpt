@@ -292,6 +292,13 @@ class H2Oai(PromptStyle):
     def apply(self, prompt: str, **kwargs: str) -> str:
         return f"<|prompt|>{prompt}</s><|answer|>"
 
+class AnsJa(PromptStyle):
+    def apply(self, prompt: str, **kwargs: str) -> str:
+        return (
+            "### ユーザー:\n"
+            f"{prompt}\n\n"
+            "### アシスタント:\n"
+        )
 
 # Maps prompt style names to PromptStyle classes
 prompt_styles: Dict[str, Type[PromptStyle]] = {
@@ -319,6 +326,7 @@ prompt_styles: Dict[str, Type[PromptStyle]] = {
     "gemma": Gemma,
     "h2oai": H2Oai,
     "llama3": Llama3,
+    "AnsJa": AnsJa
 }
 
 
