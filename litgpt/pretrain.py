@@ -383,21 +383,15 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
     losses = []
 
     for k, batch in enumerate(val_dataloader):
-        print('k,max_iters', k, max_iters)
         if k >= max_iters:
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
 
         logits = model(input_ids)
-        print('input_ids', input_ids.size())
-        print('logits', logits.size())
-        print('targets', targets.size())
         loss = chunked_cross_entropy(logits, targets)
-        print('loss', loss.size())
         losses.append(loss)
 
-    print('len', len(losses))
     val_loss = torch.stack(losses).mean()
     model.train()
     fabric.barrier()
