@@ -49,9 +49,9 @@ def main():
     
     def to_text(example):
         if args.inp_key in example:
-            text = format(instruction=example[args.ins_key], input=example[args.inp_key], output=example[args.output_key])
+            text = format(instruction=example[args.ins_key], input=example[args.inp_key], output=example[args.out_key])
         else:
-            text = format(instruction=example[args.ins_key], output=example[args.output_key])
+            text = format(instruction=example[args.ins_key], output=example[args.out_key])
         example['text'] = text
         return example
     ds = ds.map(to_text)
