@@ -101,7 +101,8 @@ def setup(
         strategy = "auto"
 
     fabric = L.Fabric(devices=devices, strategy=strategy, precision=precision, loggers=logger)
-    fabric.launch(main, devices, resume, seed, config, data, checkpoint_dir, out_dir, train, eval, optimizer, tokenizer)
+    fabric.launch()
+    main(fabric, devices, resume, seed, config, data, checkpoint_dir, out_dir, train, eval, optimizer, tokenizer)
 
 
 def main(
