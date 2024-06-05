@@ -47,20 +47,16 @@ def main():
         ds = load_dataset(args.dataset_path, split="train")
     print(ds)
     
-    texts = []
-    for v in ds:
-        if args.inp_key in v:
-            text = format(instruction=v[args.ins_key], input=v[args.inp_key], output=v[args.output_key])
+    def to_text(example):
+        if args.inp_key in example:
+            text = format(instruction=example[args.ins_key], input=example[args.inp_key], output=example[args.output_key])
         else:
-            text = format(instruction=v[args.ins_key], output=v[args.output_key])
-        new_text = ''
-        for v in text.split('\n'):
-            if len(v) > 20:
-                new_text += v + '\n'
-        texts.append(new_text)
-
-    with open(args.output_file, 'w') as f:
-        f.writelines(texts)
+            text = format(instruction=example[args.ins_key], output=example[args.output_key])
+        example['text'] = text
+    ds = ds.map(to_text)
+    remove_col = ds.column_names().remove('text')
+    ds = ds.remove_columns(remove_col)
+    ds.to_json(args.output_file, force_ascii=False)
     print('end...', args.output_file)
 
 if __name__ == '__main__':
