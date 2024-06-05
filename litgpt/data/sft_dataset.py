@@ -52,6 +52,9 @@ class SFTDataset(Alpaca):
         if isinstance(self.prompt_style, str):
             self.prompt_style = PromptStyle.from_name(self.prompt_style)
 
+    def prepare_data(self) -> None:
+        pass
+
     def setup(self) -> None:
         ds_list = []
         for id in self.repo_ids.split(","):
