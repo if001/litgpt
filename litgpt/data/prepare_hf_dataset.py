@@ -41,6 +41,7 @@ def prepare(
     use_cache: bool = False
 ) -> None:
     assert dataset_ids != ""
+    total_len = 0
     dataset_ids = dataset_ids.split(',')
     from datasets import load_dataset
     for id in dataset_ids:
@@ -49,6 +50,7 @@ def prepare(
             print('use cache...')
             continue
         ds = load_dataset(id, split="train")
+        total_len += len(ds)
         tmp_name = id.split('/')[-1]
         if dataset_max_len != -1 and len(ds) > dataset_max_len:
             print('dataset splited...', len(ds), int(len(ds)/dataset_max_len))
@@ -60,6 +62,7 @@ def prepare(
         else:
             ds.to_json(str(tmp_dir /f'{tmp_name}.jsonl'), force_ascii=False)
 
+    print('total_len', total_len)
     from litdata.processing.data_processor import DataProcessor
 
     tokenizer = Tokenizer(tokenizer_path)
