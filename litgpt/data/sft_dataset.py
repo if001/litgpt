@@ -70,13 +70,13 @@ class SFTDatasetHF(Alpaca):
         for v in ds['train']:
             _v = format(v)
             if _v:
-                train_data.append()
+                train_data.append(_v)
 
         test_data = []
         for v in ds['test']:
             _v = format(v)
             if _v:
-                test_data.append(format(v))
+                test_data.append(_v)
         
         train_data, test_data = list(train_data), list(test_data)
 
