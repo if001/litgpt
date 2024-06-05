@@ -35,7 +35,7 @@ class SFTDataset(Alpaca):
 
     mask_prompt: bool = False
     """Whether to mask the prompt section from the label (with ``ignore_index``)."""
-    val_split_fraction: float = 0.1
+    val_split_fraction: float = 0.01
     """The fraction of the dataset to use for the validation dataset. The rest is used for training."""
     prompt_style: Union[str, PromptStyle] = "alpaca"
     """The style to apply to instruction prompts. See `litgpt.prompts` for a list of available styles."""
@@ -58,7 +58,7 @@ class SFTDataset(Alpaca):
             _ds = load_dataset(id, split="train")
             ds_list.append(_ds)
 
-        ds = concatenate_datasets(ds_list).shuffle(seed=42).train_test_split(test_size=0.1)
+        ds = concatenate_datasets(ds_list).shuffle(seed=42).train_test_split(test_size=self.val_split_fraction)
 
         train_data = []
         for v in ds['train']:
