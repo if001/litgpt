@@ -64,7 +64,7 @@ class BinDataset(DataModule):
         from litdata.streaming import StreamingDataset, TokensLoader
 
         val_dataset = StreamingDataset(
-            input_dir=str(self.train_data_path),
+            input_dir=str(self.val_data_path),
             item_loader=TokensLoader(block_size=self.max_seq_length),
             shuffle=True,
             # Consider setting to False, but we would lose some samples due to truncation when world size > 1
