@@ -27,7 +27,7 @@ def format(ds):
         output = ds['answer']
     else:
         output = ds['output']
-    return dict({"instruct": text, "output": output})
+    return dict({"instruction": text, "output": output})
 
 @dataclass
 class SFTDatasetHF(Alpaca):
