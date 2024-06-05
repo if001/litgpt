@@ -269,6 +269,8 @@ def fit(
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
     print('train_dataloader', len(train_dataloader))
+    iter_in_epoch = len(train_dataloader) / (train.global_batch_size / train.micro_batch_size)
+
     train_iterator = CycleIterator(train_dataloader)
 
     running_loss = RunningMean(window=train.gradient_accumulation_iters(devices), sync_on_compute=False).to(
@@ -282,14 +284,15 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if train_iterator.epoch >= max_epochs: ## epoch base
+        if train_iterator.epoch >= max_epochs or state["iter_num"] > iter_in_epoch*max_epochs: ## epoch base
             print('reach max epoch, done...')
             break
         if state["step_count"] >= max_steps: ## step base
             print('reach max steps, done...')
             break
         # determine and set the learning rate for this iteration
-        scheduler_type="const"
+        # scheduler_type="const"
+        scheduler_type="exp"
         lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr, scheduler_type=scheduler_type)
         for param_group in optimizer.param_groups:
             param_group["lr"] = lr
@@ -404,7 +407,7 @@ def get_dataloaders(
 
 
 # learning rate decay scheduler (cosine with linear warmup)
-def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min_lr: float, scheduler_type="cos") -> float:
+def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min_lr: float, scheduler_type="cos", stable_train_step = -1) -> float:
     # 1) linear warmup for warmup_iters steps
     if it < warmup_iters:
         return learning_rate * it / warmup_iters
@@ -420,6 +423,10 @@ def get_lr(learning_rate: float, it: int, warmup_iters: int, max_iters: int, min
         assert 0 <= decay_ratio <= 1
         coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))  # coeff ranges 0..1
         return min_lr + coeff * (learning_rate - min_lr)
+    elif scheduler_type == "exp":
+        _tmp = 0.05
+        f = math.exp(-1 * (it - stable_train_step) * _tmp)
+        return f * learning_rate
     else:
         raise ValueError(f'not impl {scheduler_type}')
 
