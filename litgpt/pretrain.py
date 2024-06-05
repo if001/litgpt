@@ -282,7 +282,6 @@ def fit(
     warmup_iters = train.warmup_iters(devices, max_iters, train_dataloader)
 
     while True:
-        print('train_iterator.epoch', train_iterator.epoch, max_epochs)
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
@@ -322,7 +321,8 @@ def fit(
             optimizer.step()
             optimizer.zero_grad()
             state["step_count"] += 1
-
+            
+        print('iter', state["iter_num"])
         if state["iter_num"] % log_iter_interval == 0:
             loss = running_loss.compute().item()  # expensive device-to-host synchronization
             t1 = time.perf_counter()
