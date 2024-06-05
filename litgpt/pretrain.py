@@ -284,7 +284,7 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if train_iterator.epoch >= max_epochs: ## epoch base
+        if train_iterator.epoch > max_epochs: ## epoch base
             print('reach max epoch, done...')
             break
         if state["step_count"] >= max_steps: ## step base
@@ -293,7 +293,10 @@ def fit(
         # determine and set the learning rate for this iteration
         # scheduler_type="const"
         scheduler_type="exp"
-        lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, train.min_lr, scheduler_type=scheduler_type)
+        lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, 
+                    train.min_lr, scheduler_type=scheduler_type,
+                    stable_train_step=96000
+                    )
         for param_group in optimizer.param_groups:
             param_group["lr"] = lr
 
@@ -385,9 +388,14 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
 
         logits = model(input_ids)
+        print('input_ids', input_ids.size())
+        print('logits', logits.size())
+        print('targets', targets.size())
         loss = chunked_cross_entropy(logits, targets)
+        print('loss', loss.size())
         losses.append(loss)
 
+    print('len', len(losses))
     val_loss = torch.stack(losses).mean()
     model.train()
     fabric.barrier()
