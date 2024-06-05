@@ -135,6 +135,7 @@ def setup(
     fabric.print(pprint.pformat(hparams))
     if logger_name in ("tensorboard", "wandb"):
         hparams = hparams.pop('resume')
+        fabric.print(pprint.pformat(hparams))
         fabric.logger.log_hyperparams(hparams)
 
     main(
