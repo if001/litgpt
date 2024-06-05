@@ -18,11 +18,11 @@ _URL: str = "https://huggingface.co/datasets/databricks/databricks-dolly-15k/res
 
 def format(ds):
     if 'query' in ds:
-        text = ds['instruct'] + "\n" + ds["input"]
-    elif 'input' in ds and 'instruct' in ds:
         text = ds['query']
+    elif 'input' in ds and 'instruction' in ds:
+        text = ds['instruction'] + "\n" + ds["input"]
     else:
-        text = ds['instruct']
+        text = ds['instruction']
     if 'answer' in ds:
         output = ds['answer']
     else:
