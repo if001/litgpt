@@ -56,7 +56,8 @@ def main():
         return example
     ds = ds.map(to_text)
     print('ds', ds)
-    remove_col = ds.column_names.remove('text')
+    remove_col = ds.column_names
+    remove_col.remove('text')
     print('remove_col', remove_col)
     ds = ds.remove_columns(remove_col)
     print('ds', ds)
