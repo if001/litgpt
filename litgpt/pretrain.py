@@ -282,6 +282,7 @@ def fit(
     warmup_iters = train.warmup_iters(devices, max_iters, train_dataloader)
 
     while True:
+        print('train_iterator.epoch', train_iterator.epoch, max_epochs)
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
