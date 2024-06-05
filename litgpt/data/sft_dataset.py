@@ -23,10 +23,13 @@ def format(ds):
         text = ds['instruction'] + "\n" + ds["input"]
     else:
         text = ds['instruction']
+
     if 'answer' in ds:
         output = ds['answer']
     else:
         output = ds['output']
+    if text is None or output is None:
+        return None
     return dict({"instruction": text, "output": output})
 
 @dataclass
@@ -65,11 +68,15 @@ class SFTDatasetHF(Alpaca):
 
         train_data = []
         for v in ds['train']:
-            train_data.append(format(v))
+            _v = format(v)
+            if _v:
+                train_data.append()
 
         test_data = []
         for v in ds['test']:
-            test_data.append(format(v))
+            _v = format(v)
+            if _v:
+                test_data.append(format(v))
         
         train_data, test_data = list(train_data), list(test_data)
 
