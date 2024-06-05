@@ -53,6 +53,7 @@ def main():
         else:
             text = format(instruction=example[args.ins_key], output=example[args.output_key])
         example['text'] = text
+        return example
     ds = ds.map(to_text)
     remove_col = ds.column_names().remove('text')
     ds = ds.remove_columns(remove_col)
