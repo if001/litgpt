@@ -296,7 +296,7 @@ def fit(
         scheduler_type="exp"
         lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, 
                     train.min_lr, scheduler_type=scheduler_type,
-                    stable_train_step=96000
+                    stable_train_step=0
                     )
         for param_group in optimizer.param_groups:
             param_group["lr"] = lr
@@ -321,8 +321,7 @@ def fit(
             optimizer.step()
             optimizer.zero_grad()
             state["step_count"] += 1
-            
-        print('iter', state["iter_num"])
+
         if state["iter_num"] % log_iter_interval == 0:
             loss = running_loss.compute().item()  # expensive device-to-host synchronization
             t1 = time.perf_counter()
