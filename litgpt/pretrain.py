@@ -134,6 +134,7 @@ def setup(
 
     fabric.print(pprint.pformat(hparams))
     if logger_name in ("tensorboard", "wandb"):
+        hparams.pop('resume')
         fabric.logger.log_hyperparams(hparams)
 
     main(
@@ -379,9 +380,10 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
     fabric.barrier()
     fabric.print("Validating ...")
     model.eval()
-    fabric.print('len(val_dataloader)', len(val_dataloader))
     losses = []
+
     for k, batch in enumerate(val_dataloader):
+        print('k,max_iters', k, max_iters)
         if k >= max_iters:
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
