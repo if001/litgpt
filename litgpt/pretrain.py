@@ -269,7 +269,7 @@ def fit(
     log_iter_interval = train.log_interval * train.gradient_accumulation_iters(devices)
     initial_iter = state["iter_num"]
     print('train_dataloader', len(train_dataloader))
-    iter_in_epoch = len(train_dataloader) / (train.global_batch_size / train.micro_batch_size)
+    # iter_in_epoch = len(train_dataloader) / (train.global_batch_size / train.micro_batch_size)
 
     train_iterator = CycleIterator(train_dataloader)
 
@@ -284,7 +284,7 @@ def fit(
         if state["iter_num"] >= max_iters: ## token base
             print('reach max iter, done...')
             break
-        if train_iterator.epoch >= max_epochs or state["iter_num"] > iter_in_epoch*max_epochs: ## epoch base
+        if train_iterator.epoch >= max_epochs: ## epoch base
             print('reach max epoch, done...')
             break
         if state["step_count"] >= max_steps: ## step base
