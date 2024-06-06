@@ -122,7 +122,7 @@ class ConstantLengthDataset(IterableDataset):
             if self.shuffle:
                 random.shuffle(examples)
             for example in examples:
-                print('ex', example)
+                print('e', torch.LongTensor(example))
                 self.current_size += 1
                 yield {
                     "input_ids": torch.LongTensor(example),
