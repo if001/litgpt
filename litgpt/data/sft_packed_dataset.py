@@ -28,7 +28,7 @@ def format(ds):
     else:
         output = ds['output']
 
-    if 'q1' and 'a1':
+    if ('q1' in ds) and ('a1' in ds) and ('q2' in ds) and ('a2' in ds):
         text = ds['q1'] + "\n"
         + "### アシスタント:\n"
         + ds['a1'] + "\n"
