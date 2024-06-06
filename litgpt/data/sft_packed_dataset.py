@@ -55,7 +55,7 @@ class SFTPackedDatasetHF(Alpaca):
     repo_ids: str = ""
 
     # num_of_sequences: int = 1024
-    num_of_sequences: int = 20
+    num_of_sequences: int = 5
     chars_per_token: int = 2
     append_concat_token: bool = True
     add_special_tokens: bool = True
