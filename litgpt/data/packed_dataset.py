@@ -58,13 +58,13 @@ class ConstantLengthDataset(IterableDataset):
     ):
         self.tokenizer = tokenizer
 
-        if tokenizer.eos_id is None:
+        if tokenizer.eos_token_id is None:
             warnings.warn(
                 "The passed tokenizer does not have an EOS token. We will use the passed eos_token_id instead which corresponds"
                 f" to {eos_token_id}. If this is not the correct EOS token, make sure to pass the correct eos_token_id."
             )
 
-        self.concat_token_id = tokenizer.eos_id if tokenizer.eos_id else eos_token_id
+        self.concat_token_id = tokenizer.eos_token_id if tokenizer.eos_token_id else eos_token_id
         self.dataset = dataset
         self.seq_length = seq_length
         self.infinite = infinite
@@ -152,7 +152,7 @@ def prepare_packed_dataloader(
                 infinite=False,
                 num_of_sequences=num_of_sequences,
                 chars_per_token=chars_per_token,
-                eos_token_id=tokenizer.eos_id,
+                eos_token_id=tokenizer.eos_token_id,
                 append_concat_token=append_concat_token,
                 add_special_tokens=add_special_tokens,
             )

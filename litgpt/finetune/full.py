@@ -122,7 +122,7 @@ def main(
     validate_args(train, eval)
 
     tokenizer = Tokenizer(tokenizer_repo)
-    train_dataloader, val_dataloader = get_dataloaders(fabric, data, tokenizer, train)
+    train_dataloader, val_dataloader = get_dataloaders(fabric, data, tokenizer_repo, train)
     print('train_dataloader len: ', len(train_dataloader))
     steps_per_epoch = len(train_dataloader) // train.gradient_accumulation_iters(devices)
     lr_max_steps = min(train.epochs * steps_per_epoch, (train.max_steps or float("inf")))
@@ -343,9 +343,9 @@ def get_lr_scheduler(optimizer, warmup_steps: int, max_steps: int):
 
 
 def get_dataloaders(
-    fabric: L.Fabric, data: DataModule, tokenizer: Tokenizer, train: TrainArgs
+    fabric: L.Fabric, data: DataModule, tokenizer_id: str, train: TrainArgs
 ) -> Tuple[DataLoader, DataLoader]:
-    data.connect(tokenizer=tokenizer, batch_size=train.micro_batch_size, max_seq_length=train.max_seq_length)
+    data.connect(tokenizer_id=tokenizer_id, batch_size=train.micro_batch_size, max_seq_length=train.max_seq_length)
     with fabric.rank_zero_first():
         data.prepare_data()
     data.setup()

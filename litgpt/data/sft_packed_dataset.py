@@ -13,6 +13,7 @@ from datasets import Dataset
 from litgpt import Tokenizer
 from litgpt.data import Alpaca
 from litgpt.data.packed_dataset import prepare_packed_dataloader
+from transformers import AutoTokenizer
 
 
 def format(ds):
@@ -60,9 +61,9 @@ class SFTPackedDatasetHF(Alpaca):
     dataset_text_field: str = "text"
 
     def connect(
-        self, tokenizer: Optional[Tokenizer] = None, batch_size: int = 1, max_seq_length: Optional[int] = None
+        self, tokenizer_id: str = "", batch_size: int = 1, max_seq_length: Optional[int] = None
     ) -> None:
-        self.tokenizer = tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
         # self.batch_size = batch_size
         self.max_seq_length = max_seq_length
 
