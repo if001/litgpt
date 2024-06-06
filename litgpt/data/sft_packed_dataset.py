@@ -87,6 +87,7 @@ class SFTPackedDatasetHF(Alpaca):
         print('before train dataset', self.train_dataset)
         self.test_dataset = _dataset['test']
 
+    
     def train_dataloader(self) -> DataLoader:
         dataset = prepare_packed_dataloader(
                 self.tokenizer,
@@ -99,7 +100,12 @@ class SFTPackedDatasetHF(Alpaca):
                 self.append_concat_token,
                 self.add_special_tokens,
             )
-        return DataLoader(dataset, batch_size=self.batch_size, shuffle=False, pin_memory=True)
+        def collate_fn(batch):
+            print('batch', batch)
+            return batch
+
+        return DataLoader(dataset, batch_size=self.batch_size, 
+                          shuffle=False, pin_memory=True, collate_fn=collate_fn)
 
     def val_dataloader(self) -> DataLoader:
         dataset = prepare_packed_dataloader(
