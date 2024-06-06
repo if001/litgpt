@@ -14,7 +14,7 @@ from litgpt import Tokenizer
 from litgpt.data import Alpaca
 from litgpt.data.packed_dataset import prepare_packed_dataloader
 from transformers import AutoTokenizer
-
+from transformers import DataCollatorForLanguageModeling
 
 def format(ds):
     if 'query' in ds and 'answer':
@@ -73,6 +73,7 @@ class SFTPackedDatasetHF(Alpaca):
         pass
 
     def setup(self) -> None:
+        self.data_collator = DataCollatorForLanguageModeling(tokenizer=self.tokenizer, mlm=False)
         json_list = []
         for id in self.repo_ids.split(","):
             _ds = load_dataset(id, split="train")
@@ -100,9 +101,8 @@ class SFTPackedDatasetHF(Alpaca):
                 self.append_concat_token,
                 self.add_special_tokens,
             )
-
         return DataLoader(dataset, batch_size=self.batch_size, 
-                          shuffle=False, pin_memory=True)
+                          shuffle=False, pin_memory=True, collate_fn=self.data_collator)
 
     def val_dataloader(self) -> DataLoader:
         dataset = prepare_packed_dataloader(
@@ -117,4 +117,4 @@ class SFTPackedDatasetHF(Alpaca):
                 self.add_special_tokens,
             )
         return DataLoader(dataset, batch_size=self.batch_size, shuffle=False, 
-                          pin_memory=True)
+                          pin_memory=True, collate_fn=self.data_collator)
