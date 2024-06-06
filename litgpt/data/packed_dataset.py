@@ -150,7 +150,7 @@ def prepare_packed_dataloader(
                 infinite=False,
                 num_of_sequences=num_of_sequences,
                 chars_per_token=chars_per_token,
-                eos_token_id=tokenizer.eos_token_id,
+                eos_token_id=tokenizer.eos_id,
                 append_concat_token=append_concat_token,
                 add_special_tokens=add_special_tokens,
             )
