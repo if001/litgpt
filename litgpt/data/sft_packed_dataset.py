@@ -54,7 +54,8 @@ class SFTPackedDatasetHF(Alpaca):
     """The random seed for creating the train/val splits and shuffling the dataset."""
     repo_ids: str = ""
 
-    num_of_sequences: int = 1024
+    # num_of_sequences: int = 1024
+    num_of_sequences: int = 20
     chars_per_token: int = 2
     append_concat_token: bool = True
     add_special_tokens: bool = True
