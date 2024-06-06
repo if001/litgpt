@@ -28,7 +28,6 @@ def format(ds):
         output = ds['output']
 
     if ('q1' in ds) and ('a1' in ds) and ('q2' in ds) and ('a2' in ds):
-        print('aa: ', ds, ('q1' in ds))
         text = ds['q1'] + "\n" \
         + "### アシスタント:\n" \
         + ds['a1'] + "\n" \
@@ -83,6 +82,7 @@ class SFTPackedDatasetHF(Alpaca):
         _dataset = Dataset.from_list(json_list)
         _dataset = concatenate_datasets(_dataset).shuffle(seed=self.seed).train_test_split(test_size=self.val_split_fraction)
         self.train_dataset = _dataset['train']
+        print('before train dataset', self.test_dataset)
         self.test_dataset = _dataset['text']
 
 

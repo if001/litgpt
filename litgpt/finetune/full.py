@@ -123,6 +123,7 @@ def main(
 
     tokenizer = Tokenizer(tokenizer_repo)
     train_dataloader, val_dataloader = get_dataloaders(fabric, data, tokenizer, train)
+    print('train_dataloader len: ', len(train_dataloader))
     steps_per_epoch = len(train_dataloader) // train.gradient_accumulation_iters(devices)
     lr_max_steps = min(train.epochs * steps_per_epoch, (train.max_steps or float("inf")))
     fabric.print("lr_max_steps", lr_max_steps)
