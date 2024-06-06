@@ -29,12 +29,13 @@ def format(ds):
         output = ds['output']
 
     if ('q1' in ds) and ('a1' in ds) and ('q2' in ds) and ('a2' in ds):
+        print('aa: ', ds, ('q1' in ds))
         text = ds['q1'] + "\n"
         + "### アシスタント:\n"
         + ds['a1'] + "\n"
         + "### ユーザー:\n"
         ds['q2']  + "\n\n"
-        output = ds['a1']
+        output = ds['a2']
 
     if text is None or output is None:
         return None
