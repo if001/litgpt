@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Union
 
 import torch
-from torch.utils.data import random_split
+from torch.utils.data import DataLoader, random_split
 from datasets import concatenate_datasets, load_dataset
 
 
@@ -28,6 +28,15 @@ def format(ds):
         output = ds['answer']
     else:
         output = ds['output']
+
+    if 'q1' and 'a1':
+        text = ds['q1'] + "\n"
+        + "### アシスタント:\n"
+        + ds['a1'] + "\n"
+        + "### ユーザー:\n"
+        ds['q2']  + "\n\n"
+        output = ds['a1']
+
     if text is None or output is None:
         return None
     return dict({"instruction": text, "output": output})
