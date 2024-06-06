@@ -4,6 +4,8 @@ from  datasets import Dataset
 from datasets.arrow_writer import SchemaInferenceError
 from datasets.builder import DatasetGenerationError
 from torch.utils.data import IterableDataset
+import random
+import torch
 
 class ConstantLengthDataset(IterableDataset):
     """
@@ -56,13 +58,13 @@ class ConstantLengthDataset(IterableDataset):
     ):
         self.tokenizer = tokenizer
 
-        if tokenizer.eos_token_id is None:
+        if tokenizer.eos_id is None:
             warnings.warn(
                 "The passed tokenizer does not have an EOS token. We will use the passed eos_token_id instead which corresponds"
                 f" to {eos_token_id}. If this is not the correct EOS token, make sure to pass the correct eos_token_id."
             )
 
-        self.concat_token_id = tokenizer.eos_token_id if tokenizer.eos_token_id else eos_token_id
+        self.concat_token_id = tokenizer.eos_id if tokenizer.eos_id else eos_token_id
         self.dataset = dataset
         self.seq_length = seq_length
         self.infinite = infinite
