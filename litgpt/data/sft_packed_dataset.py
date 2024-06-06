@@ -64,7 +64,7 @@ class SFTPackedDatasetHF(Alpaca):
         self, tokenizer_id: str = "", batch_size: int = 1, max_seq_length: Optional[int] = None
     ) -> None:
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
-        # self.batch_size = batch_size
+        self.batch_size = batch_size
         self.max_seq_length = max_seq_length
 
 
@@ -87,10 +87,7 @@ class SFTPackedDatasetHF(Alpaca):
         self.test_dataset = _dataset['test']
 
     def train_dataloader(self) -> DataLoader:
-        print('self.max_seq_length,' , self.max_seq_length)
-        print('self.num_of_sequences', self.num_of_sequences)
-        print('self.chars_per_token' , self.chars_per_token)
-        return prepare_packed_dataloader(
+        dataset = prepare_packed_dataloader(
                 self.tokenizer,
                 self.train_dataset,
                 self.dataset_text_field,
@@ -101,9 +98,10 @@ class SFTPackedDatasetHF(Alpaca):
                 self.append_concat_token,
                 self.add_special_tokens,
             )
+        return DataLoader(dataset, batch_size=self.batch_size, shuffle=False, pin_memory=True)
 
     def val_dataloader(self) -> DataLoader:
-        return prepare_packed_dataloader(
+        dataset = prepare_packed_dataloader(
                 self.tokenizer,
                 self.test_dataset,
                 self.dataset_text_field,
@@ -114,3 +112,4 @@ class SFTPackedDatasetHF(Alpaca):
                 self.append_concat_token,
                 self.add_special_tokens,
             )
+        return DataLoader(dataset, batch_size=self.batch_size, shuffle=False, pin_memory=True)
