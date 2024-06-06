@@ -73,26 +73,18 @@ class SFTPackedDatasetHF(Alpaca):
         pass
 
     def setup(self) -> None:
-        ds_list = []
+        json_list = []
         for id in self.repo_ids.split(","):
             _ds = load_dataset(id, split="train")
-            ds_list.append(_ds)
+            for v in _ds:
+                _v = format(v)
+                if _v:
+                    json_list.append(_v)
 
-        ds = concatenate_datasets(ds_list).shuffle(seed=self.seed).train_test_split(test_size=self.val_split_fraction)
-
-        train_data = []
-        for v in ds['train']:
-            _v = format(v)
-            if _v:
-                train_data.append(_v)
-
-        test_data = []
-        for v in ds['test']:
-            _v = format(v)
-            if _v:
-                test_data.append(_v)
-        self.train_data = Dataset.from_list(train_data)
-        self.test_data = Dataset.from_list(test_data)
+        _dataset = Dataset.from_list(json_list)
+        _dataset = concatenate_datasets(_dataset).shuffle(seed=self.seed).train_test_split(test_size=self.val_split_fraction)
+        self.train_dataset = _dataset['train']
+        self.test_dataset = _dataset['text']
 
 
     def train_dataloader(self) -> DataLoader:
