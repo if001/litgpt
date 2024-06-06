@@ -85,8 +85,10 @@ class SFTPackedDatasetHF(Alpaca):
         print('before train dataset', self.test_dataset)
         self.test_dataset = _dataset['test']
 
-
     def train_dataloader(self) -> DataLoader:
+        print('self.max_seq_length,' , self.max_seq_length)
+        print('self.num_of_sequences', self.num_of_sequences)
+        print('self.chars_per_token' , self.chars_per_token)
         return prepare_packed_dataloader(
                 self.tokenizer,
                 self.train_dataset,
