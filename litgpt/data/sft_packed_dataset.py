@@ -82,7 +82,7 @@ class SFTPackedDatasetHF(Alpaca):
         _dataset = Dataset.from_list(json_list)
         _dataset = _dataset.shuffle(seed=self.seed).train_test_split(test_size=self.val_split_fraction)
         self.train_dataset = _dataset['train']
-        print('before train dataset', self.test_dataset)
+        print('before train dataset', self.train_dataset)
         self.test_dataset = _dataset['test']
 
     def train_dataloader(self) -> DataLoader:
