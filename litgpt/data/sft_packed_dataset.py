@@ -16,16 +16,15 @@ from litgpt.data.packed_dataset import prepare_packed_dataloader
 
 
 def format(ds):
-    if 'query' in ds:
+    if 'query' in ds and 'answer':
         text = ds['query']
-    elif 'input' in ds and 'instruction' in ds:
-        text = ds['instruction'] + "\n" + ds["input"]
-    else:
-        text = ds['instruction']
-
-    if 'answer' in ds:
         output = ds['answer']
-    else:
+    
+    if 'instruction' in ds and 'output' in ds:
+        if 'input' in ds:
+            text = ds['instruction'] + "\n" + ds["input"]
+        else:
+            text = ds['instruction']
         output = ds['output']
 
     if ('q1' in ds) and ('a1' in ds) and ('q2' in ds) and ('a2' in ds):
