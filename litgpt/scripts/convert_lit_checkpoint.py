@@ -138,7 +138,8 @@ def copy_weights_llama(
 
     for name, param in lit_weights.items():
         if name == "lm_head.weight" and untie_weights:
-            continue
+            to_name = name
+            # continue
         if name.endswith(".attn.attn.weight"):
             from_name, l = layer_template(name, 2)
             q = "model.layers.{}.self_attn.q_proj.weight".format(l)
