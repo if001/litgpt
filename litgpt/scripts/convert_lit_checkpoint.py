@@ -159,11 +159,12 @@ def copy_weights_llama(
                 to_name = weight_map[from_name]
                 to_name = to_name.format(l=l, e=e)
             else:
+                print('name', name)
                 to_name = weight_map[name]
+                print('to_name', to_name)
             param = load_param(param, name, None)
             if saver is not None:
                 param = saver.store_early(param)
-            print('to_name', to_name)
             state_dict[to_name] = param
 
 
