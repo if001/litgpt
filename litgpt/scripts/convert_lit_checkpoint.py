@@ -166,6 +166,7 @@ def copy_weights_llama(
             param = load_param(param, name, None)
             if saver is not None:
                 param = saver.store_early(param)
+            print('to_name 2', to_name)
             state_dict[to_name] = param
 
 
