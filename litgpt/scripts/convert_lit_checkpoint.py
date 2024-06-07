@@ -111,7 +111,8 @@ def copy_weights_llama(
         "transformer.h.{}.attn.proj.weight": "model.layers.{l}.self_attn.o_proj.weight",
         "transformer.h.{}.norm_2.weight": "model.layers.{l}.post_attention_layernorm.weight",
         "transformer.h.{}.norm_2.bias": "model.layers.{l}.post_attention_layernorm.bias",
-        "transformer.ln_f.weight": "model.norm.weight",
+        # "transformer.ln_f.weight": "model.norm.weight",
+        "transformer.ln_f.weight": "lm_head.weight",
         "transformer.ln_f.bias": "model.norm.bias",
         "lm_head.weight": "lm_head.weight",
     }
@@ -137,8 +138,7 @@ def copy_weights_llama(
 
     for name, param in lit_weights.items():
         if name == "lm_head.weight" and untie_weights:
-            to_name = "lm_head.weight"
-            # continue
+            continue
         if name.endswith(".attn.attn.weight"):
             from_name, l = layer_template(name, 2)
             q = "model.layers.{}.self_attn.q_proj.weight".format(l)
@@ -159,9 +159,7 @@ def copy_weights_llama(
                 to_name = weight_map[from_name]
                 to_name = to_name.format(l=l, e=e)
             else:
-                print('name', name)
                 to_name = weight_map[name]
-                print('to_name', to_name)
             param = load_param(param, name, None)
             if saver is not None:
                 param = saver.store_early(param)
