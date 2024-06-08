@@ -38,7 +38,7 @@ def format(ds):
 
     if text is None or output is None:
         return None
-    prompt = f"""### ユーザー
+    prompt = f"""### ユーザー:
 {text}
 
 ### アシスタント:
