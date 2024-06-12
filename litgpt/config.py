@@ -985,6 +985,25 @@ gemma = [
         mlp_class_name="GemmaMLP",
         gelu_approximate="tanh",
         intermediate_size=4096,
+    ),
+    dict(
+        name="Gemma-tiny-v2",
+        hf_config=dict(org="google", name="gemma-tiny-v2"),
+        scale_embeddings=True,
+        vocab_size=96867,
+        padding_multiple=64,
+        block_size=1024,  # max_seq_lenとして使われる
+        n_embd=1024,
+        n_layer=4,
+        n_head=4,
+        n_query_groups=1,
+        rotary_percentage=1.0,
+        parallel_residual=False,
+        bias=False,
+        norm_class_name="RMSNorm",
+        mlp_class_name="GemmaMLP",
+        gelu_approximate="tanh",
+        intermediate_size=4096,
     ),    
 ]
 configs.extend(gemma)
@@ -1496,6 +1515,54 @@ phi = [
         lm_head_bias=True,
         gelu_approximate="tanh",
     ),
+    dict(
+        name="phi-3_mini", ## 3.8B
+        hf_config=dict(org="microsoft", name="phi-3"),
+        hidden_size=3072,
+        initializer_range=0.02,
+        intermediate_size=8192,
+        max_position_embeddings=4096,
+        model_type="phi3",
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=32,
+        original_max_position_embeddings=4096,
+        pad_token_id=32000,
+        resid_pdrop=0.0,
+        rms_norm_eps=1e-05,
+        rope_scaling=None,
+        rope_theta=10000.0,
+        sliding_window=2047,
+        tie_word_embeddings=False,
+        torch_dtype="bfloat16",
+        transformers_version="4.39.3",
+        use_cache=True,
+        vocab_size=32064
+    ),
+    dict(
+        name="phi-3_tiny", ## 3.8B
+        hf_config=dict(org="microsoft", name="phi-3"),
+        hidden_size=512,
+        initializer_range=0.02,
+        intermediate_size=4096,
+        max_position_embeddings=1024,
+        model_type="phi3",
+        num_attention_heads=4,
+        num_hidden_layers=2,
+        num_key_value_heads=2,
+        original_max_position_embeddings=1024,
+        pad_token_id=32000,
+        resid_pdrop=0.0,
+        rms_norm_eps=1e-05,
+        rope_scaling=None,
+        rope_theta=10000.0,
+        sliding_window=1024,
+        tie_word_embeddings=False,
+        torch_dtype="bfloat16",
+        transformers_version="4.39.3",
+        use_cache=True,
+        vocab_size=96867
+    ),
 ]
 configs.extend(phi)
 
@@ -1641,5 +1708,65 @@ llama_2_function_calling = [
 ]
 
 configs.extend(llama_2_function_calling)
+
+
+################
+# qwen2
+################
+qwen2 = [
+    dict(
+        name="qwen2-0.5B",
+        hf_config=dict(org="qwen", name="qwen2-0.5B"),
+        vocab_size=50257,
+        attention_dropout=0.0,
+        bos_token_id=1, ## llm-jp
+        eos_token_id=7, ## llm-jp
+        hidden_act="silu",
+        hidden_size=896,
+        initializer_range=0.02,
+        intermediate_size=4864,
+        max_position_embeddings=131072,
+        max_window_layers=24,
+        model_type="qwen2",
+        num_attention_heads=14,
+        num_hidden_layers=24,
+        num_key_value_heads=2,
+        rms_norm_eps=1e-06,
+        rope_theta=1000000.0,
+        sliding_window=131072,
+        tie_word_embeddings=True,
+        torch_dtype="bfloat16",
+        transformers_version="4.40.1",
+        use_cache=True,
+        use_sliding_window=False,
+    ),
+    dict(
+        name="qwen2-0.1B",
+        hf_config=dict(org="qwen", name="qwen2-0.1B"),
+        vocab_size=50257,
+        attention_dropout=0.0,
+        bos_token_id=1, ## llm-jp
+        eos_token_id=7, ## llm-jp
+        hidden_act="silu",
+        hidden_size=512,
+        initializer_range=0.02,
+        intermediate_size=2048,
+        max_position_embeddings=131072,
+        max_window_layers=24,
+        model_type="qwen2",
+        num_attention_heads=6,
+        num_hidden_layers=6,
+        num_key_value_heads=2,
+        rms_norm_eps=1e-06,
+        rope_theta=1000000.0,
+        sliding_window=131072,
+        tie_word_embeddings=True,
+        torch_dtype="bfloat16",
+        transformers_version="4.40.1",
+        use_cache=True,
+        use_sliding_window=False,
+    ),
+]
+configs.extend(qwen2)
 
 name_to_config = {config["name"]: config for config in configs}
