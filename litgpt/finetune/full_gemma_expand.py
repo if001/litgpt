@@ -3,6 +3,7 @@ import dataclasses
 import math
 import os
 import time
+import copy
 from pathlib import Path
 from pprint import pprint
 from typing import Dict, List, Literal, Optional, Tuple, Union
@@ -138,7 +139,7 @@ def main(
     checkpoint_path = checkpoint_dir / "lit_model.pth"
     with fabric.init_module(empty_init=(devices > 1)):
         base_model = GPT(base_config)
-        new_state_dict = base_model.state_dict()
+        new_state_dict = copy.deepcopy(base_model.state_dict())
         for v in new_state_dict:
             if 'transformer.h' in v:
                 _name = v.split('.')
