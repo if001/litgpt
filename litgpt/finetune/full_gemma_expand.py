@@ -150,7 +150,7 @@ def main(
                     _idx = 3
                 _first = ".".join(_name[:2])
                 _last = ".".join(_name[3:])
-                _layer = _first + str(_idx) + _last
+                _layer = _first + "." + str(_idx) + "." + _last
                 new_state_dict[_layer] = new_state_dict[v]
     print('-'*10)
     print('new_state_dict', new_state_dict)
