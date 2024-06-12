@@ -140,7 +140,7 @@ def main(
     with fabric.init_module(empty_init=(devices > 1)):
         base_model = GPT(base_config)
         new_state_dict = copy.deepcopy(base_model.state_dict())
-        for v in new_state_dict:
+        for v in base_model.state_dict():
             if 'transformer.h' in v:
                 _name = v.split('.')
                 idx = int(_name[2])
