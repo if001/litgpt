@@ -138,8 +138,19 @@ def main(
     checkpoint_path = checkpoint_dir / "lit_model.pth"
     with fabric.init_module(empty_init=(devices > 1)):
         base_model = GPT(base_config)
-        for v in base_model.state_dict():
-            print(v)
+        new_state_dict = base_model.state_dict()
+        for v in new_state_dict:
+            if 'transformer.h' in v:
+                _name = v.split('.')
+                idx = int(_name[2])
+                if idx==0:
+                    _idx = 2
+                if idx==1:
+                    _idx = 3
+                new_state_dict[_name[:2] + _idx + _name[3:]] = new_state_dict[v]
+    print('-'*10)
+    for v in new_state_dict:
+        print(v)
     exit(0)
     with fabric.init_module(empty_init=True):
         model = GPT(config)
