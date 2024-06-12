@@ -147,7 +147,8 @@ def main(
                     _idx = 2
                 if idx==1:
                     _idx = 3
-                new_state_dict[_name[:2] + _idx + _name[3:]] = new_state_dict[v]
+                _layer = f"{_name[:2]}{_idx}{_name[3:]}"
+                new_state_dict[_layer] = new_state_dict[v]
     print('-'*10)
     for v in new_state_dict:
         print(v)
