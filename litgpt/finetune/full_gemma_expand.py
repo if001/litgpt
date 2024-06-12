@@ -150,6 +150,8 @@ def main(
                 _layer = f"{_name[:2]}{_idx}{_name[3:]}"
                 new_state_dict[_layer] = new_state_dict[v]
     print('-'*10)
+    print('new_state_dict', new_state_dict)
+    print('='*10)
     for v in new_state_dict:
         print(v)
     exit(0)
