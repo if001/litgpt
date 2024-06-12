@@ -10,6 +10,7 @@ from litgpt.finetune.adapter import setup as finetune_adapter_fn
 from litgpt.finetune.adapter_v2 import setup as finetune_adapter_v2_fn
 from litgpt.finetune.full import setup as finetune_full_fn
 from litgpt.finetune.lora import setup as finetune_lora_fn
+from litgpt.finetune.full_gemma_expand import setup as full_gemma_expand
 from litgpt.generate.adapter import main as generate_adapter_fn
 from litgpt.generate.adapter_v2 import main as generate_adapter_v2_fn
 from litgpt.generate.base import main as generate_base_fn
@@ -58,6 +59,7 @@ def main() -> None:
             "full": {"help": "Finetune a model.", "fn": finetune_full_fn},
             "adapter": {"help": "Finetune a model with Adapter.", "fn": finetune_adapter_fn},
             "adapter_v2": {"help": "Finetune a model with Adapter v2.", "fn": finetune_adapter_v2_fn},
+            "full_gemma_expand": {"help": "Finetune for gemma expand", "fn": full_gemma_expand}
         },
         "pretrain": {"help": "Pretrain a model.", "fn": pretrain_fn},
         "generate": {
