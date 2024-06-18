@@ -236,6 +236,7 @@ def fit(
     tokenizer_dir: Optional[Path],
     train: TrainArgs,
     eval: EvalArgs,
+    model_name: str
 ) -> None:
     model = state["model"]
     optimizer = state["optimizer"]
