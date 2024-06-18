@@ -14,7 +14,7 @@ print(sys.path)
 
 from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
 
-from config import Config
+from litgpt.hf_config import HFConfig as Config
 
 class Phi3(Phi3ForCausalLM):
     def __init__(self, config):
