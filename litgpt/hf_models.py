@@ -4,7 +4,7 @@ from transformers import (
     Qwen2ForCausalLM, 
     Qwen2Config
 )
-from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
+from litgpt.matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
 
 from config import Config
 
