@@ -4,8 +4,9 @@ from transformers import (
     Qwen2ForCausalLM, 
     Qwen2Config
 )
+from pathlib import Path
 import sys
-sys.path.append(__file__)
+sys.path.append(str(Path(__file__).parent.parent))
 print(sys.path)
 
 from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
