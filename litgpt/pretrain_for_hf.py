@@ -323,6 +323,7 @@ def fit(
             optimizer.zero_grad()
             state["step_count"] += 1
 
+        measured_flops = 0
         if state["iter_num"] % log_iter_interval == 0:
             loss = running_loss.compute().item()  # expensive device-to-host synchronization
             t1 = time.perf_counter()
