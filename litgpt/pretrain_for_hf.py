@@ -250,16 +250,16 @@ def fit(
 
     throughput = ThroughputMonitor(fabric, window_size=5)
 
-    with torch.device("meta"):
-        config = get_config(model_name)
-        meta_model = get_hf_models(config)
-        meta_model.max_seq_length = train.max_seq_length
-        x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
-        model_fwd = lambda : meta_model(x).logits
-        model_loss = lambda y: chunked_cross_entropy(y, x, chunk_size=0)
-        measured_flops = measure_flops(meta_model, model_fwd, model_loss)
-        fabric.print(f"Measured TFLOPs: {measured_flops * fabric.world_size / 1e12:.2f}")
-        del meta_model, x
+    # with torch.device("meta"):
+    #     config = get_config(model_name)
+    #     meta_model = get_hf_models(config)
+    #     meta_model.max_seq_length = train.max_seq_length
+    #     x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
+    #     model_fwd = lambda : meta_model(x).logits
+    #     model_loss = lambda y: chunked_cross_entropy(y, x, chunk_size=0)
+    #     measured_flops = measure_flops(meta_model, model_fwd, model_loss)
+    #     fabric.print(f"Measured TFLOPs: {measured_flops * fabric.world_size / 1e12:.2f}")
+    #     del meta_model, x
 
     max_tokens_per_device = train.max_tokens // fabric.world_size
     tokens_per_iter = train.micro_batch_size * model.max_seq_length
