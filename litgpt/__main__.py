@@ -28,6 +28,7 @@ from litgpt.scripts.merge_lora import merge_lora as merge_lora_fn
 from litgpt.eval.evaluate import convert_and_evaluate as evaluate_fn
 from litgpt.deploy.serve import run_server as serve_fn
 
+from litgpt.pretrain_for_hf import setup as pretrain_for_hf_fn
 
 if TYPE_CHECKING:
     from jsonargparse import ArgumentParser
@@ -62,6 +63,7 @@ def main() -> None:
             "full_gemma_expand": {"help": "Finetune for gemma expand", "fn": full_gemma_expand}
         },
         "pretrain": {"help": "Pretrain a model.", "fn": pretrain_fn},
+        "pretrain_for_hf": {"help": "Pretrain for hf model", "fn": pretrain_for_hf_fn},
         "generate": {
             "help": "Generate text samples based on a model and tokenizer.",
             "base": {"fn": generate_base_fn, "help": "Default generation option."},
