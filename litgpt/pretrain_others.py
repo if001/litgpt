@@ -21,7 +21,7 @@ from litgpt import Tokenizer
 from litgpt.args import EvalArgs, TrainArgs
 from litgpt.config import name_to_config
 from litgpt.data import DataModule, TinyLlama
-from litgpt.model import GPT, Block, CausalSelfAttention, Config, LLaMAMLP
+from litgpt.model import GPT, Block, CausalSelfAttention, LLaMAMLP
 from litgpt.utils import (
     CycleIterator,
     capture_hparams,
@@ -37,7 +37,7 @@ from litgpt.utils import (
     save_config,
     save_hyperparameters,
 )
-
+from litgpt.hf_config import HFConfig as Config
 from hf_models import get_hf_models
 
 def format_number(num):
