@@ -74,6 +74,7 @@ def setup(
         min_lr=4e-5,
         lr_warmup_steps=2000,
         tie_embeddings=False,
+        max_seq_length=1024
     ),
     eval: EvalArgs = EvalArgs(interval=1000, max_iters=100),
     optimizer: Union[str, Dict] = "AdamW",
@@ -175,7 +176,6 @@ def main(
     t0 = time.perf_counter()
     with fabric.init_module(empty_init=True):
         config = get_config(model_name)
-        print('config', config)
         model = get_hf_models(config)
         fabric.print('model', model)
     # initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
@@ -188,7 +188,7 @@ def main(
     fabric.print(f"Time to instantiate model: {time.perf_counter() - t0:.02f} seconds.")
     fabric.print(f"Total parameters: {num_parameters(model):,}")
 
-    model = torch.compile(model)
+    # model = torch.compile(model)
     model = fabric.setup(model)
     show_total_params(model)
 
