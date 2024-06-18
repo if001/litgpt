@@ -16,15 +16,15 @@ from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
 
 class Phi3(Phi3ForCausalLM):
     def __init__(self, config):
-        super().__init__(Phi3Config(config))
+        super().__init__(Phi3Config(**config))
 
 class Qwen2(Qwen2ForCausalLM):
     def __init__(self, config):
-        super().__init__(Qwen2Config(config))
+        super().__init__(Qwen2Config(**config))
 
 class MatMulFree(HGRNBitForCausalLM):
     def __init__(self, config):
-        super().__init__(HGRNBitConfig(config))
+        super().__init__(HGRNBitConfig(**config))
 
 
 def get_hf_models(config):

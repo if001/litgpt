@@ -73,9 +73,9 @@ matmul_free = [
     dict(
         name="matmul-free-0.1B",
         hf_config=dict(org="matmul-free", name="matmul-free-0.1B"),
-        vocab_size=50257, ## llm_jp
-        hidden_size = 2048,
-        num_hidden_layers = 12,
+        vocab_size=50257,
+        hidden_size = 896,
+        num_hidden_layers = 8,
         attn_mode = "fused_recurrent",
         num_heads = 1,
         expand_ratio = 1,
@@ -86,7 +86,7 @@ matmul_free = [
         hidden_ratio = 4,
         intermediate_size = None,
         hidden_act = "swish",
-        max_position_embeddings = 2048,
+        max_position_embeddings = 1024,
         rms_norm_eps = 1e-6,
         use_cache = True,
         pad_token_id = None,
