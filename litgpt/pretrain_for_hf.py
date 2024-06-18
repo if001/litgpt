@@ -216,7 +216,7 @@ def main(
         fabric.load(resume, state)
 
     train_time = time.perf_counter()
-    fit(fabric, devices, state, train_dataloader, val_dataloader, out_dir, tokenizer_dir, train, eval)
+    fit(fabric, devices, state, train_dataloader, val_dataloader, out_dir, tokenizer_dir, train, eval, model_name)
 
     # Save final checkpoint
     save_checkpoint(fabric, state, tokenizer_dir, out_dir / "final" / "lit_model.pth")
@@ -250,7 +250,8 @@ def fit(
     throughput = ThroughputMonitor(fabric, window_size=5)
 
     with torch.device("meta"):
-        meta_model = GPT(model.config)
+        config = get_config(model_name)
+        meta_model = get_hf_models(config)
         x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
         model_fwd = lambda: meta_model(x)
         model_loss = lambda y: chunked_cross_entropy(y, x, chunk_size=0)
@@ -387,7 +388,6 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
 
         outputs = model(input_ids)
-        print('out', outputs)
         loss = chunked_cross_entropy(outputs.logits, targets)
         losses.append(loss)
 
