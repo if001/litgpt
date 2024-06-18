@@ -30,12 +30,12 @@ class MatMulFree(HGRNBitForCausalLM):
 def get_hf_models(config):
     if 'name' not in config:
         raise ValueError('config must have name field')
-
-    if config.name == 'phi-3':
+    model_name = config['name']
+    if model_name == 'phi-3':
         return Phi3(config)
-    elif config.name == 'qwen2':
+    elif model_name == 'qwen2':
         return Qwen2(config)
-    elif config.name == 'matmul-free-0.1B':
+    elif model_name == 'matmul-free-0.1B':
         return MatMulFree(config)
     else:
-        raise ValueError('not impl hf models')
+        raise ValueError('not impl hf models: ', model_name)
