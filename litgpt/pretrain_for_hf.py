@@ -182,8 +182,8 @@ def main(
 
     if train.tie_embeddings:
         model.transformer.wte.weight = model.lm_head.weight
-    if train.max_seq_length:
-        model.max_seq_length = train.max_seq_length
+    model.max_seq_length = train.max_seq_length
+
     fabric.print(f"max_seq_len: {model.max_seq_length}")
     fabric.print(f"Time to instantiate model: {time.perf_counter() - t0:.02f} seconds.")
     fabric.print(f"Total parameters: {num_parameters(model):,}")
