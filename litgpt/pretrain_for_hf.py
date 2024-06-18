@@ -253,6 +253,7 @@ def fit(
     with torch.device("meta"):
         config = get_config(model_name)
         meta_model = get_hf_models(config)
+        meta_model.max_seq_length = train.max_seq_length
         x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
         model_fwd = lambda: meta_model(x)
         model_loss = lambda y: chunked_cross_entropy(y, x, chunk_size=0)
