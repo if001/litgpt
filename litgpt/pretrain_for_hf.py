@@ -255,7 +255,7 @@ def fit(
         meta_model = get_hf_models(config)
         meta_model.max_seq_length = train.max_seq_length
         x = torch.randint(0, 1, (train.micro_batch_size, meta_model.max_seq_length))
-        model_fwd = lambda x: meta_model(x).logits
+        model_fwd = lambda : meta_model(x).logits
         model_loss = lambda y: chunked_cross_entropy(y, x, chunk_size=0)
         measured_flops = measure_flops(meta_model, model_fwd, model_loss)
         fabric.print(f"Measured TFLOPs: {measured_flops * fabric.world_size / 1e12:.2f}")
