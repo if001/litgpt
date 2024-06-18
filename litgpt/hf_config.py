@@ -95,6 +95,7 @@ matmul_free = [
         tie_word_embeddings = False,
         initializer_range = 0.02,
         fuse_cross_entropy = True,
+        max_seq_length=1024,
     )
 ]
 
