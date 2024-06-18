@@ -6,6 +6,7 @@ from transformers import (
 )
 import sys
 sys.path.append(__file__)
+print(sys.path)
 
 from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
 
