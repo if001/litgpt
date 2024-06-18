@@ -73,7 +73,7 @@ matmul_free = [
     dict(
         name="matmul-free-0.1B",
         hf_config=dict(org="matmul-free", name="matmul-free-0.1B"),
-        vocab_size=50257,
+        vocab_size=96867,
         hidden_size = 896,
         num_hidden_layers = 8,
         attn_mode = "fused_recurrent",
