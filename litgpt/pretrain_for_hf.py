@@ -313,6 +313,7 @@ def fit(
         with fabric.no_backward_sync(model, enabled=is_accumulating):
             outputs = model(input_ids)
             # loss = chunked_cross_entropy(outputs.logits, targets)
+            print('outputs,', outputs)
             loss = outputs.loss
             print('loss,', loss)
             fabric.backward(loss / train.gradient_accumulation_iters(devices))
