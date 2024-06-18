@@ -14,8 +14,6 @@ print(sys.path)
 
 from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
 
-from litgpt.hf_config import HFConfig as Config
-
 class Phi3(Phi3ForCausalLM):
     def __init__(self, config):
         super().__init__(Phi3Config(config))
@@ -29,7 +27,7 @@ class MatMulFree(HGRNBitForCausalLM):
         super().__init__(HGRNBitConfig(config))
 
 
-def get_hf_models(config: Config):
+def get_hf_models(config):
     if config.name == 'phi-3':
         return Phi3(config)
     elif config.name == 'qwen2':
