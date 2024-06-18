@@ -38,7 +38,7 @@ from litgpt.utils import (
     save_hyperparameters,
 )
 from litgpt.hf_config import HFConfig as Config
-from hf_models import get_hf_models
+from litgpt.hf_models import get_hf_models
 
 def format_number(num):
     if abs(num) >= 10**12:  # Trillion
