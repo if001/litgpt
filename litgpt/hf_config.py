@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-from typing_extensions import Self
-from typing import Any
-
 def get_config(model_name):
     if model_name not in name_to_config:
         raise ValueError('model not impl')
