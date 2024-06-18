@@ -1,0 +1,3 @@
+[submodule "matmulfreellm"]
+	path = matmulfreellm
+	url = git@github.com:if001/matmulfreellm.git
