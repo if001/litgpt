@@ -311,7 +311,7 @@ def fit(
 
         is_accumulating = state["iter_num"] % train.gradient_accumulation_iters(devices) != 0
         with fabric.no_backward_sync(model, enabled=is_accumulating):
-            outputs = model(input_ids)
+            outputs = model(input_ids, labels=targets)
             # loss = chunked_cross_entropy(outputs.logits, targets)
             print('outputs,', outputs)
             loss = outputs.loss
