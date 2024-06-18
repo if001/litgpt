@@ -175,6 +175,7 @@ def main(
     t0 = time.perf_counter()
     with fabric.init_module(empty_init=True):
         config = get_config(model_name)
+        print('config', config)
         model = get_hf_models(config)
         fabric.print('model', model)
     # initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
