@@ -8,7 +8,8 @@ from pathlib import Path
 import sys
 matmulfreellm_path = Path(__file__).parent.parent
 sys.path.append(str(matmulfreellm_path))
-sys.path.append(str(matmulfreellm_path / 'mmfreelm'))
+sys.path.append(str(matmulfreellm_path / 'matmulfreellm' ))
+sys.path.append(str(matmulfreellm_path / 'matmulfreellm' /'mmfreelm'))
 print(sys.path)
 
 from matmulfreellm.mmfreelm.models import HGRNBitForCausalLM, HGRNBitConfig
