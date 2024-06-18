@@ -2,25 +2,11 @@ from dataclasses import dataclass
 from typing_extensions import Self
 from typing import Any
 
-@dataclass
-class HFConfig:
-    name: str = ''
-
-    @classmethod
-    def from_name(cls, name: str, **kwargs: Any) -> Self:
-        print(configs)
-        if name not in name_to_config:
-            # search through all `config['hf_config']['name']`
-            try:
-                conf_dict = next(config for config in configs if name == config["hf_config"]["name"])
-            except StopIteration:
-                raise ValueError(f"{name!r} is not a supported config name")
-        else:
-            conf_dict = name_to_config[name]
-
-        conf_dict = conf_dict.copy()
-        conf_dict.update(kwargs)
-        return cls(**conf_dict)
+def get_config(model_name):
+    if model_name not in name_to_config:
+        raise ValueError('model not impl')
+    conf_dict = name_to_config[model_name]
+    return conf_dict
 
 configs = []
 

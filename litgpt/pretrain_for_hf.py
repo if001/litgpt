@@ -37,8 +37,8 @@ from litgpt.utils import (
     save_config,
     save_hyperparameters,
 )
-from litgpt.hf_config import HFConfig as Config
 from litgpt.hf_models import get_hf_models
+from litgpt.hf_config import get_config
 
 def format_number(num):
     if abs(num) >= 10**12:  # Trillion
@@ -59,7 +59,6 @@ def show_total_params(model):
 
 def setup(
     model_name: Optional[str] = None,
-    model_config: Optional[Config] = None,
     out_dir: Path = Path("out/pretrain"),
     precision: Literal["bf16-true", "bf16-mixed", "32-true", None] = None,
     initial_checkpoint_dir: Optional[Path] = None,
@@ -110,12 +109,7 @@ def setup(
     """
     hparams = capture_hparams()
     data = TinyLlama() if data is None else data
-    if model_config is not None and model_name is not None:
-        raise ValueError("Only one of `model_name` or `model_config` can be set.")
-    elif model_config is None and model_name is None:
-        available_models = "\n".join(sorted(name_to_config))
-        raise ValueError(f"Please specify --model_name <model_name>. Available values:\n{available_models}")
-    config = Config.from_name(model_name) if model_config is None else model_config
+
     precision = precision or get_default_supported_precision(training=True)
     devices = parse_devices(devices)
     out_dir = init_out_dir(out_dir)
@@ -123,7 +117,7 @@ def setup(
     tokenizer = Tokenizer(tokenizer_dir) if tokenizer_dir is not None else None
 
     logger = choose_logger(
-        logger_name, out_dir, name=f"pretrain-{config.name}", resume=resume, log_interval=train.log_interval
+        logger_name, out_dir, name=f"pretrain-{model_name}", resume=resume, log_interval=train.log_interval
     )
 
     if devices > 1:
@@ -145,7 +139,6 @@ def setup(
         seed,
         initial_checkpoint_dir,
         resume,
-        config,
         data,
         out_dir,
         tokenizer_dir,
@@ -163,7 +156,6 @@ def main(
     seed: int,
     initial_checkpoint_dir: Optional[Path],
     resume: Union[bool, Path],
-    config: Config,
     data: DataModule,
     out_dir: Path,
     tokenizer_dir: Optional[Path],
@@ -182,9 +174,10 @@ def main(
 
     t0 = time.perf_counter()
     with fabric.init_module(empty_init=True):
-        model = get_hf_models(model_name)
+        config = get_config(model_name)
+        model = get_hf_models(config)
         fabric.print('model', model)
-    initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
+    # initialize_weights(fabric, model, n_layer=config.n_layer, n_embd=config.n_embd)
 
     if train.tie_embeddings:
         model.transformer.wte.weight = model.lm_head.weight
