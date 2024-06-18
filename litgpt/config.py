@@ -1769,4 +1769,36 @@ qwen2 = [
 ]
 configs.extend(qwen2)
 
+################
+# matmul free
+################
+matmul_free = [
+    dict(
+        name="matmul-free-0.1B",
+        hf_config=dict(org="matmul-free", name="matmul-free-0.1B"),
+        vocab_size=50257, ## llm_jp
+        hidden_size = 2048,
+        num_hidden_layers = 12,
+        attn_mode = "fused_recurrent",
+        num_heads = 1,
+        expand_ratio = 1,
+        use_short_conv = False,
+        conv_size = 4,
+        share_conv_kernel = True,
+        use_lower_bound = True,
+        hidden_ratio = 4,
+        intermediate_size = None,
+        hidden_act = "swish",
+        max_position_embeddings = 2048,
+        rms_norm_eps = 1e-6,
+        use_cache = True,
+        pad_token_id = None,
+        bos_token_id = 1,  ## llm-jp
+        eos_token_id = 7,  ## llm-jp
+        tie_word_embeddings = False,
+        initializer_range = 0.02,
+        fuse_cross_entropy = True,
+    )
+]
+configs.extend(matmul_free)
 name_to_config = {config["name"]: config for config in configs}
