@@ -35,7 +35,7 @@ def get_hf_models(config):
         return Phi3(config)
     elif model_name == 'qwen2':
         return Qwen2(config)
-    elif model_name == 'matmul-free-0.1B':
+    elif model_name == 'matmul-free-0.1B' or model_name == "matmul-free-sample":
         return MatMulFree(config)
     else:
         raise ValueError('not impl hf models: ', model_name)

@@ -96,6 +96,32 @@ matmul_free = [
         initializer_range = 0.02,
         fuse_cross_entropy = True,
         max_seq_length=1024,
+    ),
+    dict(
+        name="matmul-free-sample",
+        hf_config=dict(org="matmul-free", name="matmul-free-sample"),
+        vocab_size=96867,
+        hidden_size = 64,
+        num_hidden_layers = 4,
+        attn_mode = "fused_recurrent",
+        num_heads = 1,
+        expand_ratio = 1,
+        use_short_conv = True,
+        conv_size = 4,
+        share_conv_kernel = True,
+        use_lower_bound = True,
+        hidden_ratio = 4,
+        intermediate_size = None,
+        hidden_act = "swish",
+        max_position_embeddings = 128,
+        rms_norm_eps = 1e-6,
+        use_cache = True,
+        pad_token_id = None,
+        bos_token_id = 1,  ## llm-jp
+        eos_token_id = 7,  ## llm-jp
+        tie_word_embeddings = False,
+        initializer_range = 0.02,
+        fuse_cross_entropy = True,
     )
 ]
 

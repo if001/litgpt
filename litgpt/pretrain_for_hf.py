@@ -311,12 +311,12 @@ def fit(
 
         is_accumulating = state["iter_num"] % train.gradient_accumulation_iters(devices) != 0
         with fabric.no_backward_sync(model, enabled=is_accumulating):
-            print('i: ', input_ids[:10])
-            print('t: ', targets[:10])
             outputs = model(input_ids, labels=targets)
             # loss = chunked_cross_entropy(outputs.logits, targets)
             loss = outputs.loss
+            print('before', model.lm_head.weight)
             fabric.backward(loss / train.gradient_accumulation_iters(devices))
+            print('after', model.lm_head.weight)
 
         running_loss.update(loss.detach())
 
@@ -392,10 +392,9 @@ def validate(fabric: L.Fabric, model: nn.Module, val_dataloader: DataLoader, max
             break
         input_ids = batch[:, 0 : model.max_seq_length].contiguous().long()
         targets = batch[:, 1 : (model.max_seq_length + 1)].contiguous().long()
-
-        outputs = model(input_ids)
-        loss = chunked_cross_entropy(outputs.logits, targets)
-        losses.append(loss)
+        outputs = model(input_ids, labels=targets)
+        # loss = chunked_cross_entropy(outputs.logits, targets)
+        losses.append(outputs.loss)
 
     val_loss = torch.stack(losses).mean()
     model.train()
