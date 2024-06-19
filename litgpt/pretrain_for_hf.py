@@ -293,8 +293,8 @@ def fit(
             print('reach max steps, done...')
             break
         # determine and set the learning rate for this iteration
-        # scheduler_type="const"
-        scheduler_type="exp"
+        scheduler_type="const"
+        # scheduler_type="exp"
         lr = get_lr(optimizer.defaults["lr"], state["iter_num"], warmup_iters, max_iters, 
                     train.min_lr, scheduler_type=scheduler_type,
                     stable_train_step=0
