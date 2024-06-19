@@ -178,7 +178,7 @@ def main(
         config = get_config(model_name)
         model = get_hf_models(config)
         fabric.print('model', model)
-    initialize_weights(fabric, model, n_layer=config.num_hidden_layers, n_embd=config.hidden_size)
+    initialize_weights(fabric, model, n_layer=config['num_hidden_layers'], n_embd=config['hidden_size'])
 
     if train.tie_embeddings:
         model.transformer.wte.weight = model.lm_head.weight
