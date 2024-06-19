@@ -314,9 +314,7 @@ def fit(
             outputs = model(input_ids, labels=targets)
             # loss = chunked_cross_entropy(outputs.logits, targets)
             loss = outputs.loss
-            print('before', model.lm_head.weight)
             fabric.backward(loss / train.gradient_accumulation_iters(devices))
-            print('after', model.lm_head.weight)
 
         running_loss.update(loss.detach())
 
