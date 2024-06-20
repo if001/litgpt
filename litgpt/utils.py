@@ -454,6 +454,7 @@ def save_hyperparameters(function: callable, checkpoint_dir: Path) -> None:
         ("finetune", "adapter_v2"),
         ("finetune",),
         ("pretrain",),
+        ('pretrain_for_hf')
     ]
     for known_command in known_commands:
         unwanted = slice(1, 1 + len(known_command))
