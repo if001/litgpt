@@ -37,6 +37,7 @@ from litgpt.utils import (
     save_config,
     save_hyperparameters,
 )
+from transformers import PretrainedConfig
 from litgpt.hf_models import get_hf_models
 from litgpt.hf_config import get_config
 
@@ -467,7 +468,10 @@ def save_checkpoint(fabric, state, tokenizer_dir, checkpoint_file):
         # save_hyperparameters(setup, checkpoint_file.parent)
         if tokenizer_dir is not None:
             copy_config_files(tokenizer_dir, checkpoint_file.parent)
-        save_config(model.config, checkpoint_file.parent)
+        if isinstance(model.config, PretrainedConfig):
+            model.config.to_json_file(str(checkpoint_file.parent / 'config.json'))
+        else:
+            save_config(model.config, checkpoint_file.parent)
 
 
 def validate_args(train: TrainArgs, eval: EvalArgs, initial_checkpoint_dir, resume) -> None:
